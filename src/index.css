@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 2px;
+  height: 99vh;
+}
+
+.panel {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #cecece;
+}
+    
+.topbar {
+  grid-column: span 5 / span 5;
+}
+
+.object-list {
+  grid-row: span 6 / span 6;
+  grid-row-start: 2;
+}
+
+.properties {
+  grid-row: span 6 / span 6;
+  grid-column-start: 5;
+  grid-row-start: 2;
+}
+
+.workspace {
+  grid-column: span 3 / span 3;
+  grid-row: span 6 / span 6;
+  grid-column-start: 2;
+  grid-row-start: 2;
+}
+        
