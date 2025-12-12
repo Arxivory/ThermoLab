@@ -4,6 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins';
 }
 
 
@@ -18,8 +19,8 @@
 .panel {
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2px;
   border: 1.5px solid #cecece;
 }
     
@@ -43,5 +44,38 @@
   grid-row: span 6 / span 6;
   grid-column-start: 2;
   grid-row-start: 2;
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 7px;
+}
+
+.menu-item {
+  padding: 3px 5px;
+  font-size: 15px;
+}
+
+.section {
+  display: flex;
+  width: 200px;
+}
+
+.tool-set {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tool {
+  display: flex;
+  gap: 10px;
+}
+
+.tools {
+  display: flex;
+  width: 100%;
 }
         

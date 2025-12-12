@@ -1,6 +1,6 @@
 const ObjectList = () => {
   return (
-    <div className="object-list panel">ObjectList</div>
+    <div className="object-list panel"></div>
   )
 }
 

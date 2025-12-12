@@ -1,6 +1,6 @@
 const Workspace = () => {
   return (
-    <div className="workspace panel">Workspace</div>
+    <div className="workspace panel"></div>
   )
 }
 

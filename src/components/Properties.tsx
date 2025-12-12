@@ -1,6 +1,6 @@
 const Properties = () => {
   return (
-    <div className="properties panel">Properties</div>
+    <div className="properties panel"></div>
   )
 }
 

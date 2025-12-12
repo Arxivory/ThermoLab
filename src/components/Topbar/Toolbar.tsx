@@ -1,6 +1,10 @@
+import Home from "./Categories/Home"
+
 const Toolbar = () => {
   return (
-    <div>Toolbar</div>
+    <div>
+      <Home/>
+    </div>
   )
 }
 
