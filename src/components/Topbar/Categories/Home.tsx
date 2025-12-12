@@ -1,129 +1,81 @@
 import { Box, Camera, Clipboard, Copy, Eye, FileDown, FileUp, FolderOpen, FolderPlus, Globe, Group, Image, LayoutGrid, Move3D, Ruler, Save, Scissors, Trash, Ungroup, View } from "lucide-react"
 
 const Home = () => {
-    const homeToolsData = {
-        quickAccess: {
-            category: "Quick Access",
-            data: [
-                {
-                    icon: FolderPlus,
-                    title: "New"
-                },
-                {
-                    icon: FolderOpen,
-                    title: "Open"
-                },
-                {
-                    icon: Save,
-                    title: "Save"
-                },
-                {
-                    icon: FileUp,
-                    title: "Import"
-                },
-                {
-                    icon: FileDown,
-                    title: "Export"
-                }
+    const homeToolsData = [
+        {
+            key: "quick-access",
+            label: "Quick Access",
+            layout: "row",
+            items: [
+                { icon: FolderPlus, title: "New"},
+                { icon: FolderOpen, title: "Open"},
+                { icon: Save, title: "Save"},
+                { icon: FileUp, title: "Import"},
+                { icon: FileDown, title: "Export"}
             ]
         },
-        objectManagement: {
-            category: "Object Management",
-            data: [
-                {
-                    icon: Box,
-                    title: "Geometry"
-                },
-                {
-                    icon: Copy,
-                    title: "Copy"
-                },
-                {
-                    icon: Scissors,
-                    title: "Cut"
-                },
-                {
-                    icon: Clipboard,
-                    title: "Paste"
-                },
-                {
-                    icon: Trash,
-                    title: "Delete"
-                },
-                {
-                    icon: Group,
-                    title: "Group"
-                }, 
-                {
-                    icon: Ungroup,
-                    title: "Ungroup"
-                }
+        {
+            key: "object-management",
+            label: "Object Management",
+            layout: "grid",
+            items: [
+                { icon: Box, title: "Add Geometry"},
+                { icon: Copy, title: "Copy"},
+                { icon: Scissors, title: "Cut"},
+                { icon: Clipboard, title: "Paste"},
+                { icon: Group, title: "Group"},
+                { icon: Ungroup, title: "Ungroup"}
             ]
         },
-        viewManagement: {
-            category: "View Management",
-            data: [
-                {
-                    icon: Eye,
-                    title: "Single View"
-                },
-                {
-                    icon: View,
-                    title: "2D/3D View"
-                },
-                {
-                    icon: Move3D,
-                    title: "Axis View"
-                },
-                {
-                    icon: Camera,
-                    title: "Perspective"
-                },
-                {
-                    icon: Box,
-                    title: "Orthographic"
-                },
-                {
-                    icon: LayoutGrid,
-                    title: "Toggle Grid"
-                }
+        {
+            key: "view-management",
+            label: "View Management",
+            layout: "grid",
+            items: [
+                { icon: Eye, title: "Single View"},
+                { icon: View, title: "2D/3D View"},
+                { icon: Move3D, title: "Axis View"},
+                { icon: Camera, title: "Perspective"},
+                { icon: Box, title: "Orthographic"},
+                { icon: LayoutGrid, title: "Toggle Grid"}
             ]
         },
-        sceneManagement: {
-            category: "Scene Management",
-            data: [
-                {
-                    icon: Ruler,
-                    title: "Unit System"
-                },
-                {
-                    icon: Globe,
-                    title: "Scene Settings"
-                },
-                {
-                    icon: Image,
-                    title: "Environment Appearance"
-                }
+        {
+            key: "scene-management",
+            label: "Scene Management",
+            layout: "grid",
+            items: [
+                { icon: Ruler, title: "Units System"},
+                { icon: Globe, title: "Scene Settings"},
+                { icon: Image, title: "Environment"}
             ]
         }
-    }
+    ]
 
     return (
-        <div className="home-tools tools">
-            {Object.values(homeToolsData).map((section, idx) => (
+        <div className="toolbar-container">
+            {homeToolsData.map((section, index) => (
                 <>
-                <div className="section" key={idx}>
-                    <ul className="tool-set">
-                        {section.data.map((tool, i) => (
-                            <li className="tool" key={i}>
-                                <tool.icon/>
-                                {tool.title}
+                <div className={`toolbar-section ${section.key}`} key={section.key}>
+
+                    <ul className={`toolbar-icons ${section.layout}`}>
+                        {section.items.map((tool, i) => (
+                            <li className={`toolbar-item ${section.layout}`} key={i}>
+                                <tool.icon className={`tool-icon ${section.layout}`}/>
+                                <span className={`tool-title ${section.layout}`}>{tool.title}</span>
                             </li>
                         ))}
                     </ul>
+
+                    <div className="toolbar-label">{section.label}</div>
+
                 </div>
+                {index < homeToolsData.length - 1 &&
+                    <div className="toolbar-divider"></div>
+                }
                 </>
             ))}
+
         </div>
     )
 }
