@@ -15,16 +15,24 @@ const Home = () => {
             ]
         },
         {
+            key: "geometry",
+            label: "Geometry",
+            layout: "row",
+            items: [
+                { icon: Box, title: "Add"}
+            ]
+        },
+        {
             key: "object-management",
             label: "Object Management",
             layout: "grid",
             items: [
-                { icon: Box, title: "Add Geometry"},
                 { icon: Copy, title: "Copy"},
                 { icon: Scissors, title: "Cut"},
                 { icon: Clipboard, title: "Paste"},
                 { icon: Group, title: "Group"},
-                { icon: Ungroup, title: "Ungroup"}
+                { icon: Ungroup, title: "Ungroup"},
+                { icon: Trash, title: "Delete" }
             ]
         },
         {
@@ -43,7 +51,7 @@ const Home = () => {
         {
             key: "scene-management",
             label: "Scene Management",
-            layout: "grid",
+            layout: "col",
             items: [
                 { icon: Ruler, title: "Units System"},
                 { icon: Globe, title: "Scene Settings"},
