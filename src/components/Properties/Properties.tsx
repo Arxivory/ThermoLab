@@ -1,3 +1,5 @@
+import Transformations from "./Transformations"
+
 const Properties = () => {
   return (
     <div className="properties panel">
@@ -5,6 +7,9 @@ const Properties = () => {
         Properties
       </span>
       <div className="panel-horizontal-separator"></div>
+      <div className="panel-container">
+        <Transformations/>
+      </div>
     </div>
   )
 }
