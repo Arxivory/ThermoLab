@@ -1,11 +1,22 @@
+import { useEffect, useRef } from 'react';
+import { initSphere } from '../core/MaterialSphere';
+
 const Appearance = () => {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+    useEffect(() => {
+        if (!canvasRef.current) return;
+
+        initSphere(canvasRef.current);
+    })
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Appearance</span>
 
         <div className="subpanel-container appearance">
             <div className="wrapper">
-                <canvas id="material-preview-canvas" className="material-preview-canvas"></canvas>
+                <canvas ref={canvasRef} id="material-preview-canvas" className="material-preview-canvas"></canvas>
                 <div className="appearance-inputs-wrapper">
                     <div className="property">
                         <span className="property-name">
