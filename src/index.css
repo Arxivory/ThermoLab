@@ -7,13 +7,12 @@
     font-family: 'Poppins';
 }
 
-
 .parent {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(7, 1fr);
   gap: 2px;
-  height: 99vh;
+  height: 95.5vh;
 }
 
 .panel {
@@ -54,15 +53,26 @@
 }
 
 .menu-item {
-  padding: 3px 5px;
+  padding: 2px 7px;
   font-size: 13px;
+  cursor: pointer;
+  transition: 0.1s ease;
+  border-radius: 5px 5px 0 0;
+}
+
+.menu-item:hover {
+  background-color: #fafafa;
+}
+
+.menu-item.active {
+  background-color: #ffffff;
 }
 
 .toolbar-container {
   display: flex;
   width: 100%;
   background-color: #ffffff;
-  padding: 15px 17px 5px;
+  padding: 15px 20px 5px;
   align-items: center; 
 }
 

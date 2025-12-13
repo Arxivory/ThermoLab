@@ -29,8 +29,8 @@ const Tools = () => {
             label: "Kinematics",
             layout: "row",
             items: [
-                { icon: Rotate3D, title: "Angular Velocity"},
-                { icon: MoveRight, title: "Linear Velocity" },
+                { icon: Rotate3D, title: "Angular"},
+                { icon: MoveRight, title: "Linear" },
                 { icon: TrendingUpDown, title: "Force" }
             ]
         },
@@ -51,7 +51,7 @@ const Tools = () => {
             items: [
                 { icon: Database, title: "Import Data" },
                 { icon: ChartLine, title: "Add Graph" },
-                { icon: FileText, title: "Export Results" }
+                { icon: FileText, title: "Export Data" }
             ]
         }
     ]

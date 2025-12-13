@@ -1,11 +1,15 @@
 import Home from "./Categories/Home"
 import Tools from "./Categories/Tools"
 
-const Toolbar = () => {
+interface Props {
+  toolMode: string;
+}
+
+const Toolbar = ({toolMode}: Props) => {
   return (
     <div>
-      {/* <Home/> */}
-      <Tools/>
+      {toolMode === "Home" && <Home/>}
+      {toolMode === "Tools" && <Tools/>}
     </div>
   )
 }

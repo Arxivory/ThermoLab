@@ -1,15 +1,35 @@
-const Menubar = () => {
-    const barCat = ["Menu", "Home", "Tools"];
-    //const menuData = ["Back", "New", "Open", "Save", "Import", "Export"];
+import { useState } from "react";
+
+interface Props {
+    setToolMode: (mode: string) => void;
+}
+
+const Menubar = ({setToolMode}: Props) => {
+    const [isActive, setActivity] = useState(false);
+
+    const toggleActivity = () => {
+        setActivity(!isActive);
+    }
+
     return (
         <menu className="menu-bar">
-            {barCat.map((category) => {
-                return (
-                    <nav className="menu-item">
-                        {category}
-                    </nav>
-                );
-            })}
+            <nav className="menu-item">
+                Menu
+            </nav>
+            <nav className={`menu-item ${isActive && 'active'}`}
+            onClick={() => {
+                    toggleActivity()
+                    setToolMode("Home")
+                }}>
+                Home
+            </nav>
+            <nav className={`menu-item ${!isActive && 'active'}`}
+            onClick={() => {
+                    toggleActivity()
+                    setToolMode("Tools")
+                }}>
+                Tools
+            </nav>
         </menu>
     )
 }
