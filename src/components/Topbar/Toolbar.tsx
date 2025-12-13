@@ -1,9 +1,11 @@
 import Home from "./Categories/Home"
+import Tools from "./Categories/Tools"
 
 const Toolbar = () => {
   return (
     <div>
-      <Home/>
+      {/* <Home/> */}
+      <Tools/>
     </div>
   )
 }

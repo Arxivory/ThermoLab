@@ -115,6 +115,7 @@
 
 .toolbar-icons.row {
   display: flex;
+  gap: 15px;
 }
 
 .toolbar-icons.grid {
