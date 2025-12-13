@@ -1,4 +1,5 @@
 import Transformations from "./Transformations"
+import Appearance from "./Appearance"
 
 const Properties = () => {
   return (
@@ -9,6 +10,8 @@ const Properties = () => {
       <div className="panel-horizontal-separator"></div>
       <div className="panel-container">
         <Transformations/>
+        <div className="panel-horizontal-separator"></div>
+        <Appearance/>
       </div>
     </div>
   )
