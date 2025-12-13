@@ -1,5 +1,7 @@
 import Transformations from "./Transformations"
 import Appearance from "./Appearance"
+import Material from "./Material"
+import Tags from "./Tags"
 
 const Properties = () => {
   return (
@@ -12,6 +14,10 @@ const Properties = () => {
         <Transformations/>
         <div className="panel-horizontal-separator"></div>
         <Appearance/>
+        <div className="panel-horizontal-separator"></div>
+        <Material/>
+        <div className="panel-horizontal-separator"></div>
+        <Tags/>
       </div>
     </div>
   )
