@@ -5,7 +5,7 @@ interface Props {
 }
 
 const Menubar = ({setToolMode}: Props) => {
-    const [isActive, setActivity] = useState(false);
+    const [isActive, setActivity] = useState(true);
 
     const toggleActivity = () => {
         setActivity(!isActive);
