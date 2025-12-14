@@ -7,7 +7,7 @@ export function initRenderer(canvas) {
 }
 
 function render3DSpace(canvas) {
-    let scene, renderer, camera, controls;
+    let scene, renderer, camera, controls, loader;
     let fov = 45;
     let width, height;
 

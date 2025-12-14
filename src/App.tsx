@@ -5,10 +5,11 @@ import ObjectList from './components/ObjectList'
 import Properties from './components/Properties/Properties'
 import Workspace from './components/Workspace'
 import Menubar from './components/Topbar/Menubar'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 function App() {
   const [toolMode, setToolMode] = useState("Home");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   return (
     <>
@@ -17,7 +18,7 @@ function App() {
         <Topbar mode={toolMode}/>
         <ObjectList/>
         <Properties/>
-        <Workspace/>
+        <Workspace canvasRef={canvasRef}/>
       </div>
     </>
   )
