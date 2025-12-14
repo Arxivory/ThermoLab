@@ -1,6 +1,26 @@
-import { Box, Camera, Clipboard, Copy, Eye, FileDown, FileUp, FolderOpen, FolderPlus, Globe, Group, Image, LayoutGrid, Move3D, Ruler, Save, Scissors, Trash, Ungroup, View } from "lucide-react"
+import { Box, Camera, Clipboard, Copy, Eye, FileDown, 
+    FileUp, FolderOpen, FolderPlus, Globe, Group, Image, 
+    LayoutGrid, Move3D, Ruler, Save, Scissors, Trash, Ungroup, View } from "lucide-react"
+import { useRef } from "react"
+import { executeEditorAction } from "../../../editor/editor";
 
 const Home = () => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleToolClick = (action: string) => {
+        if (action === "IMPORT_OBJECT")
+            fileInputRef.current?.click();
+        else
+            executeEditorAction(action as any);
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            executeEditorAction("IMPORT_OBJECT", file);
+        } 
+    }
+
     const homeToolsData = [
         {
             key: "quick-access",
@@ -62,13 +82,23 @@ const Home = () => {
 
     return (
         <div className="toolbar-container">
+            <input
+                type="file"
+                accept=".obj"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+            />
             {homeToolsData.map((section, index) => (
                 <>
                 <div className={`toolbar-section ${section.key}`} key={section.key}>
 
                     <ul className={`toolbar-icons ${section.layout}`}>
                         {section.items.map((tool, i) => (
-                            <li className={`toolbar-item ${section.layout}`} key={i}>
+                            <li className={`toolbar-item ${section.layout}`} 
+                                key={i}
+                                onClick={() => handleToolClick(tool.action)}
+                            >
                                 <tool.icon className={`tool-icon ${section.layout}`}/>
                                 <span className={`tool-title ${section.layout}`}>{tool.title}</span>
                             </li>

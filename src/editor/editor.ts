@@ -53,7 +53,7 @@ export type EditorAction =
     | "ENVIRONMENT"
 
 
-export function executeEditorAction(action: EditorAction) {
+export function executeEditorAction(action: EditorAction, file?: File) {
     const state = useEditorStore.getState();
 
     switch (action) {
@@ -64,7 +64,11 @@ export function executeEditorAction(action: EditorAction) {
         case "PROJECT_SAVE":
             return saveProject();
         case "IMPORT_OBJECT":
-            return importObject();
+            if (file) {
+                useEditorStore.getState().setImportedFile(file);
+                return importObject(file);
+            }
+            return;
         case "EXPORT":
             return exportObject();
         case "ADD_GEOMETRY":

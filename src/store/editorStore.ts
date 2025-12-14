@@ -16,10 +16,13 @@ interface EditorState {
 
     sceneLoaded: boolean
 
+    importedFile: File | null
+
     setActiveCategory: (cat: "HOME" | "TOOLS") => void
     setSelectedObject: (id: string | null) => void
     setViewMode: (mode: ViewMode) => void
     toggleGrid: () => void
+    setImportedFile: (file: File | null) => void
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -31,8 +34,11 @@ export const useEditorStore = create<EditorState>((set) => ({
 
     sceneLoaded: false,
 
+    importedFile: null,
+
     setActiveCategory: (cat) => set({ activeCategory: cat }),
     setSelectedObject: (id) => set({ selectedObjectId: id }),
     setViewMode: (mode) => set({ viewMode: mode }),
-    toggleGrid: () => set((state) => ({ gridEnabled: !state.gridEnabled }))
+    toggleGrid: () => set((state) => ({ gridEnabled: !state.gridEnabled })),
+    setImportedFile: (file) => set({ importedFile: file })
 }))
