@@ -51,7 +51,6 @@ function render3DSpace(canvas) {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
-
     }
 
     init();
