@@ -7,11 +7,11 @@ const Home = () => {
             label: "Quick Access",
             layout: "row",
             items: [
-                { icon: FolderPlus, title: "New"},
-                { icon: FolderOpen, title: "Open"},
-                { icon: Save, title: "Save"},
-                { icon: FileUp, title: "Import"},
-                { icon: FileDown, title: "Export"}
+                { icon: FolderPlus, title: "New", action: "PROJECT_NEW"},
+                { icon: FolderOpen, title: "Open", action: "PROJECT_OPEN"},
+                { icon: Save, title: "Save", action: "PROJECT_SAVE"},
+                { icon: FileUp, title: "Import", action: "IMPORT_OBJECT"},
+                { icon: FileDown, title: "Export", action: "EXPORT"}
             ]
         },
         {
@@ -19,7 +19,7 @@ const Home = () => {
             label: "Geometry",
             layout: "row",
             items: [
-                { icon: Box, title: "Add"}
+                { icon: Box, title: "Add", action: "ADD_GEOMETRY"}
             ]
         },
         {
@@ -27,12 +27,12 @@ const Home = () => {
             label: "Object Management",
             layout: "grid",
             items: [
-                { icon: Copy, title: "Copy"},
-                { icon: Scissors, title: "Cut"},
-                { icon: Clipboard, title: "Paste"},
-                { icon: Group, title: "Group"},
-                { icon: Ungroup, title: "Ungroup"},
-                { icon: Trash, title: "Delete" }
+                { icon: Copy, title: "Copy", action: "COPY"},
+                { icon: Scissors, title: "Cut", action: "CUT"},
+                { icon: Clipboard, title: "Paste", action: "PASTE"},
+                { icon: Group, title: "Group", action: "GROUP"},
+                { icon: Ungroup, title: "Ungroup", action: "UNGROUP"},
+                { icon: Trash, title: "Delete", action: "DELETE"}
             ]
         },
         {
@@ -40,12 +40,12 @@ const Home = () => {
             label: "View Management",
             layout: "grid",
             items: [
-                { icon: Eye, title: "Single View"},
-                { icon: View, title: "2D/3D View"},
-                { icon: Move3D, title: "Axis View"},
-                { icon: Camera, title: "Perspective"},
-                { icon: Box, title: "Orthographic"},
-                { icon: LayoutGrid, title: "Toggle Grid"}
+                { icon: Eye, title: "Single View", action: "VIEW_SINGLE"},
+                { icon: View, title: "2D/3D View", action: "VIEW_SPLIT"},
+                { icon: Move3D, title: "Axis View", action: "VIEW_AXIS"},
+                { icon: Camera, title: "Perspective", action: "VIEW_PERSPECTIVE"},
+                { icon: Box, title: "Orthographic", action: "VIEW_ORTHOGRAPHIC"},
+                { icon: LayoutGrid, title: "Toggle Grid", action: "TOGGLE_GRID"}
             ]
         },
         {
@@ -53,9 +53,9 @@ const Home = () => {
             label: "Scene Management",
             layout: "col",
             items: [
-                { icon: Ruler, title: "Units System"},
-                { icon: Globe, title: "Scene Settings"},
-                { icon: Image, title: "Environment"}
+                { icon: Ruler, title: "Units System", action: "UNITS_SYSTEM"},
+                { icon: Globe, title: "Scene Settings", action: "SCENE_SETTINGS"},
+                { icon: Image, title: "Environment", action: "ENVIRONMENT"}
             ]
         }
     ]

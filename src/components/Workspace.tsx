@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from "react"
-import { initRenderer } from './core/renderer'
+import { initRenderer } from "./core/renderer/renderer"
 
 interface Props {
   canvasRef: RefObject<HTMLCanvasElement | null>
@@ -9,7 +9,8 @@ const Workspace = ({canvasRef}: Props) => {
   
   useEffect(() => {
     if (!canvasRef.current) return
-    initRenderer(canvasRef.current)
+
+    initRenderer(canvasRef.current);
   }, [canvasRef])
 
   return (
