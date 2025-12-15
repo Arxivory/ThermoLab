@@ -29,82 +29,44 @@ import { setUnitsSystem,
     setEnvironmentSettings
 } from "./commands/scene/scene";
 
-export type EditorAction =
-    | "PROJECT_NEW"
-    | "PROJECT_OPEN"
-    | "PROJECT_SAVE"
-    | "IMPORT_OBJECT"
-    | "EXPORT"
-    | "ADD_GEOMETRY"
-    | "OPEN_GEOMETRY"
-    | "COPY"
-    | "CUT"
-    | "PASTE"
-    | "GROUP"
-    | "UNGROUP"
-    | "DELETE"
-    | "VIEW_SINGLE"
-    | "VIEW_SPLIT"
-    | "VIEW_AXIS"
-    | "VIEW_PERSPECTIVE"
-    | "VIEW_ORTHOGRAPHIC"
-    | "TOGGLE_GRID"
-    | "UNITS_SYSTEM"
-    | "SCENE_SETTINGS"
-    | "ENVIRONMENT"
+import type { EditorAction } from "../types/EditorActions";
 
+type EditorCommand = (payload?: any) => void;
 
-export function executeEditorAction(action: EditorAction, file?: File) {
-    const state = useEditorStore.getState();
+const editorCommandMap: Record<EditorAction, EditorCommand> = {
+    PROJECT_NEW: () => newProject(),
+    PROJECT_OPEN: () => openProject(),
+    PROJECT_SAVE: () => saveProject(),
+    IMPORT_OBJECT: (file?: File) => file && importObject(file),
+    EXPORT: () => exportObject(),
 
-    switch (action) {
-        case "PROJECT_NEW":
-            return newProject();
-        case "PROJECT_OPEN":
-            return openProject();
-        case "PROJECT_SAVE":
-            return saveProject();
-        case "IMPORT_OBJECT":
-            if (file) {
-                useEditorStore.getState().setImportedFile(file);
-                return importObject(file);
-            }
-            return;
-        case "EXPORT":
-            return exportObject();
-        case "ADD_GEOMETRY":
-            return addGeometry();
-        case "OPEN_GEOMETRY":
-            return useEditorStore.getState().openModal("GEOMETRY");
-        case "COPY":
-            return copyObject(state.selectedObjectId);
-        case "CUT":
-            return cutObject(state.selectedObjectId);
-        case "PASTE":
-            return pasteObject();
-        case "GROUP":
-            return groupObjects();
-        case "UNGROUP":
-            return unGroupObjects();
-        case "DELETE":
-            return deleteObject(state.selectedObjectId);
-        case "VIEW_SINGLE":
-            return setSingleView();
-        case "VIEW_SPLIT":
-            return setSplitView();
-        case "VIEW_PERSPECTIVE":
-            return setPerspective();
-        case "VIEW_ORTHOGRAPHIC":
-            return setOrthographic();
-        case "VIEW_AXIS":
-            return setAxis();
-        case "TOGGLE_GRID":
-            return toggleGrid();
-        case "UNITS_SYSTEM":
-            return setUnitsSystem();
-        case "SCENE_SETTINGS":
-            return openSceneSettings();
-        case "ENVIRONMENT":
-            return setEnvironmentSettings();
-    }
+    ADD_GEOMETRY: (geometryType: string) =>
+        addGeometry(geometryType),
+
+    OPEN_GEOMETRY: () => useEditorStore.getState().openModal("GEOMETRY"),
+
+    COPY: () => copyObject(useEditorStore.getState().selectedObjectId),
+    CUT: () => cutObject(useEditorStore.getState().selectedObjectId),
+    PASTE: () => pasteObject(),
+    GROUP: () => groupObjects(),
+    UNGROUP: () => unGroupObjects(),
+    DELETE: () => deleteObject(useEditorStore.getState().selectedObjectId),
+
+    VIEW_SINGLE: () => setSingleView(),
+    VIEW_SPLIT: () => setSplitView(),
+    VIEW_AXIS: () => setAxis(),
+    VIEW_PERSPECTIVE: () => setPerspective(),
+    VIEW_ORTHOGRAPHIC: () => setOrthographic,
+    TOGGLE_GRID: () => toggleGrid(),
+
+    UNITS_SYSTEM: () => setUnitsSystem(),
+    SCENE_SETTINGS: () => openSceneSettings(),
+    ENVIRONMENT: () => setEnvironmentSettings()
+}
+
+export function executeEditorAction(
+    action: EditorAction,
+    payload?: any
+) {
+    editorCommandMap[action]?.(payload);
 }

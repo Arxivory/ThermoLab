@@ -5,8 +5,8 @@ import { executeEditorAction } from "../../editor/editor";
 const Geometries = () => {
     const closeModal = useEditorStore((s) => s.closeModal);
 
-    const handleClick = (action: string) => {
-        executeEditorAction(action as any);
+    const handleClick = (action: string, payload: string) => {
+        executeEditorAction(action as any, payload);
         closeModal();
     }
 
@@ -63,7 +63,7 @@ const Geometries = () => {
                 {geometries.map((geometry, index) => (
                     <div className="modal-item" 
                         key={index}
-                        onClick={() => handleClick(geometry.action)}
+                        onClick={() => handleClick("ADD_GEOMETRY", geometry.action)}
                     >
                         <geometry.icon className="modal-item-icon"/>
                         <span className="modal-item-label">{geometry.label}</span>
