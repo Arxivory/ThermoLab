@@ -6,6 +6,7 @@ import Properties from './components/Properties/Properties'
 import Workspace from './components/Workspace'
 import Menubar from './components/Topbar/Menubar'
 import { useRef, useState } from 'react'
+import ModalRoot from './components/modals/ModalRoot'
 
 function App() {
   const [toolMode, setToolMode] = useState("Home");
@@ -14,6 +15,9 @@ function App() {
   return (
     <>
       <Menubar setToolMode={setToolMode}/>
+
+      <ModalRoot/>
+
       <div className="parent">
         <Topbar mode={toolMode}/>
         <ObjectList/>

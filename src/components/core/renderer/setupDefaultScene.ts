@@ -1,13 +1,14 @@
 import * as THREE from "three"
 import { getScene } from "./sceneAccess"
 
+
 export function setupDefaultScene() {
   const scene = getScene()
 
   const light = new THREE.PointLight(0xffffff, 1)
   light.position.set(5, 5, 5)
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.5)
+  const ambient = new THREE.AmbientLight(0xffffff, 0.1)
 
   scene.add(light, ambient)
 

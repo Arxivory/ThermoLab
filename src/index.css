@@ -231,6 +231,13 @@
   display: flex;
   align-items: center;
   margin: 4px 0;
+  cursor: pointer;
+}
+
+.tree-node-name:hover {
+  background-color: #e6e6e6;
+  border: 1px solid #c8c8c8;
+  border-radius: 5px;
 }
 
 .node-button {
@@ -386,4 +393,65 @@
 .workspace-canvas {
   width: 98.5%;
   height: 100%;
+}
+
+.modal {
+  position: absolute;
+  z-index: 10;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #c0c0c0;
+  width: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px;
+  top: 9.5rem;
+  left: 24rem;
+}
+
+.modal-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.modal-separator {
+  height: 1px;
+  width: 100%;
+  background: #e6e6e6;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 2px 3px;
+  border: none;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+
+.modal-item:hover {
+  background-color: #e6e6e6;
+  border: 1px solid #c8c8c8;
+  border-radius: 5px;
+}
+
+.modal-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.modal-item-label {
+  font-size: 11px;
+}
+
+.modal-item-icon {
+  width: 20px;
+  height: 20px;
 }

@@ -39,7 +39,7 @@ const Home = () => {
             label: "Geometry",
             layout: "row",
             items: [
-                { icon: Box, title: "Add", action: "ADD_GEOMETRY"}
+                { icon: Box, title: "Add", action: "OPEN_GEOMETRY"}
             ]
         },
         {

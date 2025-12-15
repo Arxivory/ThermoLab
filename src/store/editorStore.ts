@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { SceneObject } from "../types/SceneObject";
 
 export type ViewMode = 
     | "SINGLE"
@@ -7,6 +8,10 @@ export type ViewMode =
     | "PERSPECTIVE"
     | "ORTHOGRAPHIC"
 
+type EditorModal =
+    | "NONE"
+    | "GEOMETRY"
+
 interface EditorState {
     activeCategory: "HOME" | "TOOLS"
     selectedObjectId: string | null;
@@ -14,15 +19,26 @@ interface EditorState {
     viewMode: ViewMode
     gridEnabled: boolean
 
+    activeModal: EditorModal
+
     sceneLoaded: boolean
 
     importedFile: File | null
+
+    objects: Record<string, SceneObject>;
 
     setActiveCategory: (cat: "HOME" | "TOOLS") => void
     setSelectedObject: (id: string | null) => void
     setViewMode: (mode: ViewMode) => void
     toggleGrid: () => void
     setImportedFile: (file: File | null) => void
+
+    addObject: (obj: SceneObject) => void
+    removeObject: (id: string) => void
+    selectObject: (id: string | null) => void
+
+    openModal: (modal: EditorModal) => void;
+    closeModal: () => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -32,13 +48,33 @@ export const useEditorStore = create<EditorState>((set) => ({
     viewMode: "SINGLE",
     gridEnabled: true,
 
+    activeModal: "NONE",
+
     sceneLoaded: false,
 
     importedFile: null,
+
+    objects: {},
 
     setActiveCategory: (cat) => set({ activeCategory: cat }),
     setSelectedObject: (id) => set({ selectedObjectId: id }),
     setViewMode: (mode) => set({ viewMode: mode }),
     toggleGrid: () => set((state) => ({ gridEnabled: !state.gridEnabled })),
-    setImportedFile: (file) => set({ importedFile: file })
+    setImportedFile: (file) => set({ importedFile: file }),
+    addObject: (obj) => 
+        set((state) => ({
+            objects: {
+                ...state.objects,
+                [obj.id]: obj
+            }
+        })),
+    removeObject: (id) => 
+        set((state) => {
+            const { [id]: _, ...rest } = state.objects;
+            return { objects: rest, selectedObjectId: null };
+        }),
+    selectObject: (id) => set({ selectedObjectId: id }),
+
+    openModal: (modal) => set({ activeModal: modal }),
+    closeModal: () => set({ activeModal: "NONE" })
 }))

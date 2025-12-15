@@ -36,6 +36,7 @@ export type EditorAction =
     | "IMPORT_OBJECT"
     | "EXPORT"
     | "ADD_GEOMETRY"
+    | "OPEN_GEOMETRY"
     | "COPY"
     | "CUT"
     | "PASTE"
@@ -73,6 +74,8 @@ export function executeEditorAction(action: EditorAction, file?: File) {
             return exportObject();
         case "ADD_GEOMETRY":
             return addGeometry();
+        case "OPEN_GEOMETRY":
+            return useEditorStore.getState().openModal("GEOMETRY");
         case "COPY":
             return copyObject(state.selectedObjectId);
         case "CUT":
