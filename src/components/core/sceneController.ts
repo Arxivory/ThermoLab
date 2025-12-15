@@ -1,6 +1,6 @@
-import { loadOBJ } from "./renderer/loaders/objLoader";
+import * as THREE from "three";
+import { getScene } from "./renderer/sceneAccess";
 
-export async function importOBJ(path: File) {
-    const object = await loadOBJ(path)
-    return object
+export function addObjectToScene(object: THREE.Object3D) {
+    getScene().add(object);
 }
