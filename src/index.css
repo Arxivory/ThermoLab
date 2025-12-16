@@ -455,3 +455,33 @@
   width: 20px;
   height: 20px;
 }
+
+.switch-panel {
+  position: absolute;
+  background-color: rgba(240, 240, 240, 0.425); 
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
+  top: 10rem;
+  left: 21rem;
+  border: 1px solid #ccc;
+}
+
+.switch-panel-icon {
+  padding: 5px;
+  width: 2.2rem;
+  height: 2.2rem;
+  color: #7b7b7b;
+  stroke-width: 1.5;
+  cursor: pointer;
+}
+
+.switch-panel-icon:hover {
+  background-color: rgba(255, 255, 255, 0.714);
+  border-radius: 3px;
+}
+
+.switch-panel-horizontal-separator {
+  height: 1px;
+  width: 100%;
+  background: #e6e6e6;
+}

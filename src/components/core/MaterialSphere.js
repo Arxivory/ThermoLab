@@ -1,14 +1,16 @@
 import * as THREE from "three"
+import { HDRLoader } from "three/examples/jsm/Addons.js";
 
 export function initSphere(canvas) {
     materialSphere(canvas);
 }
 
 function materialSphere(canvas) {
-    let scene, camera, renderer;
+    let scene, camera, renderer, envMapLoader;
     let width, height;
 
     function init() {
+        envMapLoader = new HDRLoader();
         width = canvas.clientWidth;
         height = canvas.clientHeight;
 
@@ -32,6 +34,14 @@ function materialSphere(canvas) {
             roughness: 0.41,
             reflectivity: 9
         });
+
+        envMapLoader.load('textures/environmentmaps/autumn_hill_view_4k.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            material.envMap = texture;
+            material.needsUpdate = true;
+        })
+
         const sphere = new THREE.Mesh( geometry, material );
 
         return sphere;

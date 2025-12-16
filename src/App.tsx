@@ -7,6 +7,7 @@ import Workspace from './components/Workspace'
 import Menubar from './components/Topbar/Menubar'
 import { useRef, useState } from 'react'
 import ModalRoot from './components/modals/ModalRoot'
+import TransformationModes from './components/TransformationModes'
 
 function App() {
   const [toolMode, setToolMode] = useState("Home");
@@ -23,6 +24,7 @@ function App() {
         <ObjectList/>
         <Properties/>
         <Workspace canvasRef={canvasRef}/>
+        <TransformationModes/>
       </div>
     </>
   )
