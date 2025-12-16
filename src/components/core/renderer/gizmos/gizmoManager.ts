@@ -23,3 +23,8 @@ export function updateGizmo() {
         transformControls.attach(obj.object);
     }
 }
+
+useEditorStore.subscribe(
+    (state) => state.selectedObjectId,
+    () => updateGizmo()
+);

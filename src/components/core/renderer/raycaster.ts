@@ -3,7 +3,7 @@ import { getCamera } from "./sceneAccess";
 import { getScene } from "./sceneAccess";
 import { useEditorStore } from "../../../store/editorStore";
 
-const raycaster = new THREE.RayCaster();
+const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 export function onCanvasClick(event: MouseEvent, canvas: HTMLCanvasElement) {
@@ -27,9 +27,8 @@ export function onCanvasClick(event: MouseEvent, canvas: HTMLCanvasElement) {
 
     const hit = hits[0].object;
 
-    const entry = Object.values(
-        useEditorStore.getState().objects
-    ).find(o => o.object === hit || o.object.children.includes(hit));
+    const entry = Object.values(useEditorStore.getState().objects)
+    .find(o => o.object === hit || o.object.children.some(child => child === hit));
 
     if (entry) useEditorStore.getState().selectObject(entry.id);
 }

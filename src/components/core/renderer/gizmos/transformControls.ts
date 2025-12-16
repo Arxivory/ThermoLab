@@ -8,12 +8,6 @@ export const transformControls = new TransformControls(
     getRenderer().domElement
 );
 
-transformControls.addEventListener("dragging-changed", (e) => {
-    useEditorStore.getState().setActiveCategory(
-        e.value ? "TOOLS" : "HOME"
-    );
-});
-
 transformControls.addEventListener("objectChange", () => {
     const id = useEditorStore.getState().selectedObjectId;
     if (!id) return;
@@ -26,15 +20,22 @@ transformControls.addEventListener("objectChange", () => {
     obj.scale.copy(obj.object.scale);
 });
 
-useEditorStore.subscribe((state) => {
-    const mode = state.transformMode;
-    transformControls.setMode(
-        mode === "TRANSLATE"
-            ? "translate"
-            : mode === "ROTATE"
-            ? "rotate"
-            : "scale"
-    );
-});
+useEditorStore.subscribe(
+    (state) => state.transformMode,
+    (mode) => {
+        switch (mode) {
+            case "TRANSLATE":
+                transformControls.setMode("translate");
+                break;
+            case "ROTATE":
+                transformControls.setMode("rotate");
+                break;
+            case "SCALE":
+                transformControls.setMode("scale");
+                break;
+        }
+    }
+);
+
 
 

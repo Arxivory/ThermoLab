@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { SceneObject } from "../types/SceneObject";
+import { subscribeWithSelector } from "zustand/middleware";
 
 export type ViewMode = 
     | "SINGLE"
@@ -51,44 +52,49 @@ interface EditorState {
     setTransformMode: (mode: TransformMode) => void;
 }
 
-export const useEditorStore = create<EditorState>((set) => ({
-    activeCategory: "HOME",
-    selectedObjectId: null,
+export const useEditorStore = create<EditorState>()(
+    subscribeWithSelector((set) => ({
+        activeCategory: "HOME",
+        selectedObjectId: null,
 
-    viewMode: "SINGLE",
-    gridEnabled: true,
+        viewMode: "SINGLE",
+        gridEnabled: true,
 
-    activeModal: "NONE",
+        activeModal: "NONE",
 
-    sceneLoaded: false,
+        sceneLoaded: false,
 
-    importedFile: null,
+        importedFile: null,
 
-    objects: {},
+        objects: {},
 
-    transformMode: "TRANSLATE",
+        transformMode: "TRANSLATE",
 
-    setActiveCategory: (cat) => set({ activeCategory: cat }),
-    setSelectedObject: (id) => set({ selectedObjectId: id }),
-    setViewMode: (mode) => set({ viewMode: mode }),
-    toggleGrid: () => set((state) => ({ gridEnabled: !state.gridEnabled })),
-    setImportedFile: (file) => set({ importedFile: file }),
-    addObject: (obj) => 
-        set((state) => ({
-            objects: {
-                ...state.objects,
-                [obj.id]: obj
-            }
-        })),
-    removeObject: (id) => 
-        set((state) => {
-            const { [id]: _, ...rest } = state.objects;
-            return { objects: rest, selectedObjectId: null };
-        }),
-    selectObject: (id) => set({ selectedObjectId: id }),
+        setActiveCategory: (cat) => set({ activeCategory: cat }),
+        setSelectedObject: (id) => set({ selectedObjectId: id }),
+        setViewMode: (mode) => set({ viewMode: mode }),
+        toggleGrid: () => set((state) => ({ gridEnabled: !state.gridEnabled })),
+        setImportedFile: (file) => set({ importedFile: file }),
 
-    openModal: (modal) => set({ activeModal: modal }),
-    closeModal: () => set({ activeModal: "NONE" }),
+        addObject: (obj) =>
+            set((state) => ({
+                objects: {
+                    ...state.objects,
+                    [obj.id]: obj
+                }
+            })),
 
-    setTransformMode: (mode) => set({ transformMode: mode })
-}))
+        removeObject: (id) =>
+            set((state) => {
+                const { [id]: _, ...rest } = state.objects;
+                return { objects: rest, selectedObjectId: null };
+            }),
+
+        selectObject: (id) => set({ selectedObjectId: id }),
+
+        openModal: (modal) => set({ activeModal: modal }),
+        closeModal: () => set({ activeModal: "NONE" }),
+
+        setTransformMode: (mode) => set({ transformMode: mode })
+    }))
+);

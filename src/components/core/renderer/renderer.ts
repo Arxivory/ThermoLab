@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { setupDefaultScene } from "./setupDefaultScene"
 import { startRenderLoop } from "./renderLoop"
 import { setRendererContext } from "./sceneAccess"
+import { onCanvasClick } from "./raycaster"
 
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
@@ -35,6 +36,9 @@ export function initRenderer(canvas: HTMLCanvasElement) {
   setRendererContext({scene, camera, renderer, controls})
 
   setupDefaultScene()
+
+  canvas.addEventListener("dblclick", (event) => onCanvasClick(event as unknown as MouseEvent, canvas));
+
   startRenderLoop()
 
   return {
