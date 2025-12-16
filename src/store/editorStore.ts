@@ -12,6 +12,12 @@ type EditorModal =
     | "NONE"
     | "GEOMETRY"
 
+export type TransformMode = 
+    | "NONE"
+    | "TRANSLATE"
+    | "ROTATE"
+    | "SCALE"
+
 interface EditorState {
     activeCategory: "HOME" | "TOOLS"
     selectedObjectId: string | null;
@@ -25,7 +31,9 @@ interface EditorState {
 
     importedFile: File | null
 
-    objects: Record<string, SceneObject>;
+    objects: Record<string, SceneObject>
+
+    transformMode: TransformMode;
 
     setActiveCategory: (cat: "HOME" | "TOOLS") => void
     setSelectedObject: (id: string | null) => void
@@ -39,6 +47,8 @@ interface EditorState {
 
     openModal: (modal: EditorModal) => void;
     closeModal: () => void;
+
+    setTransformMode: (mode: TransformMode) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -55,6 +65,8 @@ export const useEditorStore = create<EditorState>((set) => ({
     importedFile: null,
 
     objects: {},
+
+    transformMode: "TRANSLATE",
 
     setActiveCategory: (cat) => set({ activeCategory: cat }),
     setSelectedObject: (id) => set({ selectedObjectId: id }),
@@ -76,5 +88,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     selectObject: (id) => set({ selectedObjectId: id }),
 
     openModal: (modal) => set({ activeModal: modal }),
-    closeModal: () => set({ activeModal: "NONE" })
+    closeModal: () => set({ activeModal: "NONE" }),
+
+    setTransformMode: (mode) => set({ transformMode: mode })
 }))
