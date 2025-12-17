@@ -3,7 +3,6 @@ import { useEditorStore } from "../store/editorStore"
 
 const TransformationModes = () => {
     const setTransformMode = useEditorStore(state => state.setTransformMode);
-    const transformMode = useEditorStore(state => state.transformMode);
 
   return (
     <div className="switch-panel">

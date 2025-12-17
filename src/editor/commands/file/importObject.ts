@@ -44,7 +44,7 @@ export function importObject(file: File) {
             name: file.name,
             type: "IMPORTED",
             object: object,
-            position: object.position.clome(),
+            position: object.position.clone(),
             rotation: object.rotation.clone(),
             scale: object.scale.clone()
         });

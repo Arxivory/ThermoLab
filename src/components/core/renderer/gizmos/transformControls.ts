@@ -1,41 +1,78 @@
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
-import { getCamera } from "../sceneAccess";
-import { getRenderer } from "../sceneAccess";
+import { getCamera, getControls, getRenderer, getScene } from "../sceneAccess";
 import { useEditorStore } from "../../../../store/editorStore";
+import * as THREE from "three";
 
-export const transformControls = new TransformControls(
-    getCamera(),
-    getRenderer().domElement
-);
+let transformControls: TransformControls | null = null;
 
-transformControls.addEventListener("objectChange", () => {
-    const id = useEditorStore.getState().selectedObjectId;
-    if (!id) return;
+export function initTransformControls() {
+    const camera = getCamera();
+    const renderer = getRenderer();
+    const scene = getScene();
+    const controls = getControls();
 
-    const obj = useEditorStore.getState().objects[id];
-    if (!obj) return;
 
-    obj.position.copy(obj.object.position);
-    obj.rotation.copy(obj.object.rotation);
-    obj.scale.copy(obj.object.scale);
-});
+    console.log("From Transform:" ,camera, renderer, scene);
 
-useEditorStore.subscribe(
-    (state) => state.transformMode,
-    (mode) => {
-        switch (mode) {
-            case "TRANSLATE":
-                transformControls.setMode("translate");
-                break;
-            case "ROTATE":
-                transformControls.setMode("rotate");
-                break;
-            case "SCALE":
-                transformControls.setMode("scale");
-                break;
-        }
+    if (!camera || !renderer || !scene) {
+        console.error("TransformControls init failed: renderer not ready");
+        return;
     }
-);
 
 
+    transformControls = new TransformControls(camera, renderer.domElement);
+    scene.add(transformControls.getHelper());
 
+    transformControls.setMode("translate");
+
+    transformControls.addEventListener("objectChange", () => {
+        const id = useEditorStore.getState().selectedObjectId;
+        if (!id) return;
+
+        const obj = useEditorStore.getState().objects[id];
+        if (!obj) return;
+
+        obj.position.copy(obj.object.position);
+        obj.rotation.copy(obj.object.rotation);
+        obj.scale.copy(obj.object.scale);
+    });
+
+    transformControls.addEventListener("dragging-changed", (e) => {
+        controls.enabled = !e.value;
+    });
+
+    useEditorStore.subscribe(
+        (state) => state.transformMode,
+        (mode) => {
+            console.log(mode);
+            if (!transformControls) return;
+            if (mode === "TRANSLATE") transformControls.setMode("translate");
+            if (mode === "ROTATE") transformControls.setMode("rotate");
+            if (mode === "SCALE") transformControls.setMode("scale");
+        }
+    );
+
+    useEditorStore.subscribe(
+        (state) => state.selectedObjectId,
+        (id) => {
+            if (!transformControls) return;
+
+            if (!id) {
+                transformControls.detach();
+                console.log('object is detached');
+                return;
+            }
+
+            const obj = useEditorStore.getState().objects[id];
+            if (obj){ 
+                if (obj.object instanceof THREE.Object3D) console.log('it is an instance');
+                transformControls.attach(obj.object);
+                console.log('object is attached');
+            }
+        }
+    );
+}
+
+export function getTransformControls() {
+    return transformControls;
+}

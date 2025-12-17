@@ -4,6 +4,7 @@ import { setupDefaultScene } from "./setupDefaultScene"
 import { startRenderLoop } from "./renderLoop"
 import { setRendererContext } from "./sceneAccess"
 import { onCanvasClick } from "./raycaster"
+import { initTransformControls } from "./gizmos/transformControls"
 
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
@@ -33,11 +34,15 @@ export function initRenderer(canvas: HTMLCanvasElement) {
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
 
+  console.log("From Renderer: ", camera, renderer, scene);
+
   setRendererContext({scene, camera, renderer, controls})
 
   setupDefaultScene()
 
-  canvas.addEventListener("dblclick", (event) => onCanvasClick(event as unknown as MouseEvent, canvas));
+  initTransformControls()
+
+  canvas.addEventListener("pointerdown", onCanvasClick);
 
   startRenderLoop()
 

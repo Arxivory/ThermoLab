@@ -1,7 +1,6 @@
 import * as THREE from "three"
 import { getScene } from "./sceneAccess"
 
-
 export function setupDefaultScene() {
   const scene = getScene()
 
