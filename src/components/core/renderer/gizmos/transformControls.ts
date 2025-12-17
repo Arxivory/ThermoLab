@@ -1,7 +1,6 @@
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { getCamera, getControls, getRenderer, getScene } from "../sceneAccess";
 import { useEditorStore } from "../../../../store/editorStore";
-import * as THREE from "three";
 
 let transformControls: TransformControls | null = null;
 
@@ -11,14 +10,10 @@ export function initTransformControls() {
     const scene = getScene();
     const controls = getControls();
 
-
-    console.log("From Transform:" ,camera, renderer, scene);
-
     if (!camera || !renderer || !scene) {
         console.error("TransformControls init failed: renderer not ready");
         return;
     }
-
 
     transformControls = new TransformControls(camera, renderer.domElement);
     scene.add(transformControls.getHelper());
@@ -59,15 +54,12 @@ export function initTransformControls() {
 
             if (!id) {
                 transformControls.detach();
-                console.log('object is detached');
                 return;
             }
 
             const obj = useEditorStore.getState().objects[id];
-            if (obj){ 
-                if (obj.object instanceof THREE.Object3D) console.log('it is an instance');
+            if (obj) { 
                 transformControls.attach(obj.object);
-                console.log('object is attached');
             }
         }
     );

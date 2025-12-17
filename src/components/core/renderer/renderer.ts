@@ -34,8 +34,6 @@ export function initRenderer(canvas: HTMLCanvasElement) {
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
 
-  console.log("From Renderer: ", camera, renderer, scene);
-
   setRendererContext({scene, camera, renderer, controls})
 
   setupDefaultScene()

@@ -34,11 +34,6 @@ export function onCanvasClick(event: PointerEvent) {
     const entry = Object.values(useEditorStore.getState().objects)
     .find(o => o.object === hit || o.object.children.some(child => child === hit));
 
-    console.log(entry)
-
     if (entry) useEditorStore.getState().selectObject(entry.id);
-
-    const id = useEditorStore.getState().selectedObjectId;
     
-    console.log(id);
 }
