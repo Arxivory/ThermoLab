@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useEditorStore } from "../../store/editorStore";
 
 const Transformations = () => {
+    const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
+
+    const sceneObject = useEditorStore((s) =>
+        selectedObjectId ? s.objects[selectedObjectId] : null
+    );
+
+    const object = sceneObject?.object;
+
     const [values, setValues] = useState({
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 0, y: 0, z: 0 }
+        scale: { x: 1, y: 1, z: 1 }
     });
 
     const handleChange = (sectionKey: string, dimensionKey: string, newValue) => {
@@ -16,6 +25,28 @@ const Transformations = () => {
             }
         }));
     }
+
+    useEffect(() => {
+        if (!object) return;
+
+        object.position.set(
+            values.position.x,
+            values.position.y,
+            values.position.z
+        );
+
+        object.rotation.set(
+            values.rotation.x,
+            values.rotation.y,
+            values.rotation.z
+        );
+
+        object.scale.set(
+            values.scale.x,
+            values.scale.y,
+            values.scale.z
+        );
+    }, [object, values]);
 
     const transformationsPanelData = [
         {
