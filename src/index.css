@@ -406,7 +406,7 @@
   flex-direction: column;
   align-items: start;
   padding: 10px;
-  top: 9.5rem;
+  top: 8rem;
   left: 24rem;
 }
 
@@ -489,4 +489,11 @@
 .switch-panel-icon.active {
   background-color: rgba(255, 255, 255, 0.814);
   border-radius: 3px;
+}
+
+.modal-overlay {
+  position: absolute;
+  width: 99.5%;
+  height: 95vh;
+  z-index: 11;
 }
