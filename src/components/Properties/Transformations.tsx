@@ -1,41 +1,54 @@
 const Transformations = () => {
+    const transformationsPanelData = [
+        {
+            key: "position",
+            title: "Position",
+            dimensions: [
+                { key: "x", label: "X"},
+                { key: "y", label: "Y"},
+                { key: "z", label: "Z"},
+            ]
+        },
+        {
+            key: "rotation",
+            title: "Rotation",
+            dimensions: [
+                { key: "x", label: "X"},
+                { key: "y", label: "Y"},
+                { key: "z", label: "Z"},
+            ]
+        },
+        {
+            key: "scale",
+            title: "Scale",
+            dimensions: [
+                { key: "x", label: "X"},
+                { key: "y", label: "Y"},
+                { key: "z", label: "Z"},
+            ]
+        }
+    ];
+
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Transformations</span>
 
         <div className="subpanel-container">
-            <div className="transformation">
-                <div className="transformation-title">
-                    Position
+            {transformationsPanelData.map((section, index) => (
+                <div className="transformation" key={index}>
+                    <div className="transformation-title">
+                        {section.title}
+                    </div>
+                    <div className="transformation-inputs">
+                        {section.dimensions.map((dimension, i) => (
+                            <input type="number" placeholder={dimension.label} 
+                                className="transformation-dimension"
+                                key={i}/>
+                        ))}
+                    </div>
                 </div>
-                <div className="transformation-inputs">
-                    <input type="number" placeholder="X" className="transformation-dimension" />
-                    <input type="number" placeholder="Y" className="transformation-dimension" />
-                    <input type="number" placeholder="Z" className="transformation-dimension" />
-                </div>
-            </div>
-
-            <div className="transformation">
-                <div className="transformation-title">
-                    Rotation
-                </div>
-                <div className="transformation-inputs">
-                    <input type="number" placeholder="X" className="transformation-dimension" />
-                    <input type="number" placeholder="Y" className="transformation-dimension" />
-                    <input type="number" placeholder="Z" className="transformation-dimension" />
-                </div>
-            </div>
-
-            <div className="transformation">
-                <div className="transformation-title">
-                    Scale
-                </div>
-                <div className="transformation-inputs">
-                    <input type="number" placeholder="X" className="transformation-dimension" />
-                    <input type="number" placeholder="Y" className="transformation-dimension" />
-                    <input type="number" placeholder="Z" className="transformation-dimension" />
-                </div>
-            </div>
+            ))}
         </div>
     </div>
   )
