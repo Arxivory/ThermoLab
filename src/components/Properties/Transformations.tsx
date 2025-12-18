@@ -1,4 +1,22 @@
+import { useState } from "react";
+
 const Transformations = () => {
+    const [values, setValues] = useState({
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        scale: { x: 0, y: 0, z: 0 }
+    });
+
+    const handleChange = (sectionKey: string, dimensionKey: string, newValue) => {
+        setValues((prev) => ({
+            ...prev,
+            [sectionKey]: {
+                ...prev[sectionKey],
+                [dimensionKey]: Number(newValue)
+            }
+        }));
+    }
+
     const transformationsPanelData = [
         {
             key: "position",
@@ -33,7 +51,6 @@ const Transformations = () => {
   return (
     <div className="subpanel">
         <span className="subpanel-title">Transformations</span>
-
         <div className="subpanel-container">
             {transformationsPanelData.map((section, index) => (
                 <div className="transformation" key={index}>
@@ -44,7 +61,10 @@ const Transformations = () => {
                         {section.dimensions.map((dimension, i) => (
                             <input type="number" placeholder={dimension.label} 
                                 className="transformation-dimension"
-                                key={i}/>
+                                key={i}
+                                value={values[section.key][dimension.key]}
+                                onChange={(e) => handleChange(section.key, dimension.key, e.target.value)}
+                            />
                         ))}
                     </div>
                 </div>
