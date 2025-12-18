@@ -7,7 +7,7 @@ const Transformations = () => {
     const sceneObject = useEditorStore((s) =>
         selectedObjectId ? s.objects[selectedObjectId] : null
     );
-
+    
     const object = sceneObject?.object;
 
     const [values, setValues] = useState({
