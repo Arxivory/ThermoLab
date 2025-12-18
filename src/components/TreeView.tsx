@@ -1,5 +1,6 @@
 import { ChevronRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useEditorStore } from "../store/editorStore";
 
 interface NodeData {
   id: string;
@@ -18,12 +19,14 @@ interface TreeProps {
 const TreeNode = ({ node }: NodeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const handleNodeClick = useEditorStore((s) => s.selectObject);
+  const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
 
   const hasChildren = node.children && node.children.length > 0;
 
   return (
     <div className="tree-node">
-        <div className="tree-node-name">
+        <div className={`tree-node-name ${selectedObjectId === node.id && 'active'}`} onClick={() => handleNodeClick(node.id)}>
             {hasChildren && (
                 <button
                 className="node-button"
@@ -42,10 +45,11 @@ const TreeNode = ({ node }: NodeProps) => {
 };
 
 const TreeView = ({ data }: TreeProps) => {
+
   return (
     <div className="tree-view">
       {data.map((node) => (
-        <TreeNode key={node.id} node={node} />
+        <TreeNode key={node.id} node={node}/>
       ))}
     </div>
   );

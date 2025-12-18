@@ -1,7 +1,7 @@
 import { useEditorStore } from "../store/editorStore";
 import TreeView from "./TreeView";
 
-export const objectsData = [
+const sampleData = [
   {
     id: "engine",
     name: "Engine",

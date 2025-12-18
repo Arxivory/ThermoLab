@@ -235,6 +235,12 @@
 }
 
 .tree-node-name:hover {
+  background-color: #ebebeb;
+  border: 1px solid #c8c8c8;
+  border-radius: 5px;
+}
+
+.tree-node-name.active {
   background-color: #e6e6e6;
   border: 1px solid #c8c8c8;
   border-radius: 5px;
