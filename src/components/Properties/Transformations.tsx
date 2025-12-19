@@ -17,7 +17,15 @@ const Transformations = () => {
 
     useEffect(() => {
         if (!transform) return;
-        setValues(transform);
+        setValues({
+            position: transform.position,
+            rotation: {
+                x: transform.rotation.x * (180 / Math.PI),
+                y: transform.rotation.y * (180 / Math.PI),
+                z: transform.rotation.z * (180 / Math.PI)
+            },
+            scale: transform.scale
+        });
     }, [transform]);
 
     const handleChange = (
@@ -27,15 +35,26 @@ const Transformations = () => {
     ) => {
         if (!selectedObjectId) return;
 
+        const newVal = Number(newValue);
+
         const next = {
             ...values,
             [sectionKey]: {
-            ...values[sectionKey],
-            [dimensionKey]: Number(newValue)
+                ...values[sectionKey],
+                [dimensionKey]: 
+                    sectionKey === "rotation" ? 
+                    (newVal * (Math.PI / 180)) : 
+                    newVal
             }
         };
 
-        setValues(next);
+        setValues({
+            ...values,
+            [sectionKey]: {
+                ...values[sectionKey],
+                [dimensionKey]: newVal
+            }
+        });
 
         updateObjectTransform(selectedObjectId, next);
     };
