@@ -2,45 +2,45 @@ import * as THREE from "three";
 import { v4 as uuid } from "uuid";
 import { useEditorStore } from "../../../store/editorStore";
 import { addObjectToScene } from "../../../components/core/sceneController";
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { getEnvironmentMap } from "../../../components/core/renderer/environmentManager";
+import { getRenderer } from "../../../components/core/renderer/sceneAccess";
 
-const envMapLoader = new RGBELoader();
-const defaultMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    metalness: 0.78,
-    roughness: 0.15,
-    reflectivity: 0.3
-});
+export async function addGeometry(geometryType: string) {
 
-export function addGeometry(geometryType: string) {
-    envMapLoader.load('textures/environmentmaps/autumn_hill_view_4k.hdr', (texture) => {
-        texture.mapping = THREE.EquirectangularReflectionMapping;
-
-        defaultMaterial.envMap = texture;
-        defaultMaterial.needsUpdate = true;
-    })
+    const envMap = await getEnvironmentMap(getRenderer());
 
     switch (geometryType) {
         case "ADD_PLANE":
-            return addPlane()
+            return addPlane(envMap)
         case "ADD_CUBE":
-            return addCube()
+            return addCube(envMap)
         case "ADD_CIRCLE":
-            return addCircle()
+            return addCircle(envMap)
         case "ADD_SPHERE":
-            return addSphere()
+            return addSphere(envMap)
         case "ADD_CYLINDER":
-            return addCylinder()
+            return addCylinder(envMap)
         case "ADD_CONE":
-            return addCone()
+            return addCone(envMap)
         case "ADD_TORUS":
-            return addTorus()
+            return addTorus(envMap)
     }
 }
 
-function addPlane() {
+function createPrimitiveMaterial(envMap: THREE.Texture) {
+    return new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.78,
+        roughness: 0.15,
+        reflectivity: 0.3,
+        envMap,
+        envMapIntensity: 1.0
+    });
+}
+
+function addPlane(envMap: THREE.Texture) {
     const planeGeometry = new THREE.PlaneGeometry(1, 1);
-    const planeMesh = new THREE.Mesh(planeGeometry, defaultMaterial);
+    const planeMesh = new THREE.Mesh(planeGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(planeMesh);
 
@@ -57,9 +57,9 @@ function addPlane() {
     })
 }
 
-function addCube() {
+function addCube(envMap: THREE.Texture) {
     const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const cubeMesh = new THREE.Mesh(cubeGeometry, defaultMaterial);
+    const cubeMesh = new THREE.Mesh(cubeGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(cubeMesh);
 
@@ -76,9 +76,9 @@ function addCube() {
     });
 }
 
-function addCircle() {
+function addCircle(envMap: THREE.Texture) {
     const circleGeometry = new THREE.CircleGeometry(1, 30);
-    const circleMesh = new THREE.Mesh(circleGeometry, defaultMaterial);
+    const circleMesh = new THREE.Mesh(circleGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(circleMesh);
 
@@ -95,9 +95,9 @@ function addCircle() {
     });
 }
 
-function addSphere() {
+function addSphere(envMap: THREE.Texture) {
     const sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
-    const sphereMesh = new THREE.Mesh(sphereGeometry, defaultMaterial);
+    const sphereMesh = new THREE.Mesh(sphereGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(sphereMesh);
 
@@ -114,9 +114,9 @@ function addSphere() {
     });
 }
 
-function addCylinder() {
+function addCylinder(envMap: THREE.Texture) {
     const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 1, 30);
-    const cylinderMesh = new THREE.Mesh(cylinderGeometry, defaultMaterial);
+    const cylinderMesh = new THREE.Mesh(cylinderGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(cylinderMesh);
 
@@ -133,9 +133,9 @@ function addCylinder() {
     });
 }
 
-function addCone() {
+function addCone(envMap: THREE.Texture) {
     const coneGeometry = new THREE.ConeGeometry(1, 1, 30);
-    const coneMesh = new THREE.Mesh(coneGeometry, defaultMaterial);
+    const coneMesh = new THREE.Mesh(coneGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(coneMesh);
 
@@ -152,9 +152,9 @@ function addCone() {
     });
 }
 
-function addTorus() {
+function addTorus(envMap: THREE.Texture) {
     const torusGeometry = new THREE.TorusGeometry(1, 1, 30);
-    const torusMesh = new THREE.Mesh(torusGeometry, defaultMaterial);
+    const torusMesh = new THREE.Mesh(torusGeometry, createPrimitiveMaterial(envMap));
 
     addObjectToScene(torusMesh);
 

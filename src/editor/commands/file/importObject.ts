@@ -3,38 +3,33 @@ import { v4 as uuid } from "uuid";
 import { useEditorStore } from "../../../store/editorStore";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js"
 import { addObjectToScene } from "../../../components/core/sceneController";
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { getEnvironmentMap } from "../../../components/core/renderer/environmentManager";
+import { getRenderer } from "../../../components/core/renderer/sceneAccess";
 
-
-const texLoader = new RGBELoader();
 const loader = new OBJLoader();
 
-export function importObject(file: File) {
+export async function importObject(file: File) {
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = async () => {
         const object = loader.parse(reader.result as string);
 
         object.name = file.name;
 
-        texLoader.load( 'textures/environmentmaps/autumn_hill_view_4k.hdr', ( texture ) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
+        const envMap = await getEnvironmentMap(getRenderer());
 
-            defaultSampleMaterial.envMap = texture;
-            defaultSampleMaterial.needsUpdate = true;
-
-        });
-
-        const defaultSampleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff, 
+        const defaultMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
             metalness: 0.78,
             roughness: 0.15,
-            reflectivity: 0.3
-        });
+            reflectivity: 0.3,
+            envMap,
+            envMapIntensity: 1.0
+        })
 
         object.traverse((child: THREE.Object3D) => {
             if ((child as THREE.Mesh).isMesh) 
-                (child as THREE.Mesh).material = defaultSampleMaterial;
+                (child as THREE.Mesh).material = defaultMaterial;
         })
 
         addObjectToScene(object);
