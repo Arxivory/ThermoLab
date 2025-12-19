@@ -44,8 +44,6 @@ export function initTransformControls() {
                 z: obj.object.scale.z
             }
         })
-
-        console.log(obj.transformations);
         
     });
 
