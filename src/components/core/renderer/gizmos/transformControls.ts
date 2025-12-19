@@ -27,9 +27,26 @@ export function initTransformControls() {
         const obj = useEditorStore.getState().objects[id];
         if (!obj) return;
 
-        obj.position.copy(obj.object.position);
-        obj.rotation.copy(obj.object.rotation);
-        obj.scale.copy(obj.object.scale);
+        useEditorStore.getState().updateObjectTransform(id, {
+            position: {
+                x: obj.object.position.x,
+                y: obj.object.position.y,
+                z: obj.object.position.z
+            },
+            rotation: {
+                x: obj.object.rotation.x,
+                y: obj.object.rotation.y,
+                z: obj.object.rotation.z
+            },
+            scale: {
+                x: obj.object.scale.x,
+                y: obj.object.scale.y,
+                z: obj.object.scale.z
+            }
+        })
+
+        console.log(obj.transformations);
+        
     });
 
     transformControls.addEventListener("dragging-changed", (e) => {

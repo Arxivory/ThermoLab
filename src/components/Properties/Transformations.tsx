@@ -3,12 +3,11 @@ import { useEditorStore } from "../../store/editorStore";
 
 const Transformations = () => {
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
-
-    const sceneObject = useEditorStore((s) =>
-        selectedObjectId ? s.objects[selectedObjectId] : null
-    );
+    const updateObjectTransform = useEditorStore((s) => s.updateObjectTransform);
     
-    const object = sceneObject?.object;
+    const transform = useEditorStore((s) =>
+        selectedObjectId ? s.objects[selectedObjectId]?.transformations : null
+    );
 
     const [values, setValues] = useState({
         position: { x: 0, y: 0, z: 0 },
@@ -16,59 +15,31 @@ const Transformations = () => {
         scale: { x: 1, y: 1, z: 1 }
     });
 
-    const handleChange = (sectionKey: string, dimensionKey: string, newValue) => {
-        setValues((prev) => ({
-            ...prev,
+    useEffect(() => {
+        if (!transform) return;
+        setValues(transform);
+    }, [transform]);
+
+    const handleChange = (
+        sectionKey: "position" | "rotation" | "scale",
+        dimensionKey: "x" | "y" | "z",
+        newValue: string
+    ) => {
+        if (!selectedObjectId) return;
+
+        const next = {
+            ...values,
             [sectionKey]: {
-                ...prev[sectionKey],
-                [dimensionKey]: Number(newValue)
+            ...values[sectionKey],
+            [dimensionKey]: Number(newValue)
             }
-        }));
-    }
+        };
 
-    useEffect(() => {
-        if (!object) return;
+        setValues(next);
 
-        setValues({
-            position: {
-                x: object.position.x,
-                y: object.position.y,
-                z: object.position.z
-            },
-            rotation: {
-                x: object.rotation.x,
-                y: object.rotation.y,
-                z: object.rotation.z
-            },
-            scale: {
-                x: object.scale.x,
-                y: object.scale.y,
-                z: object.scale.z
-            }
-        })
-    }, [object]);
+        updateObjectTransform(selectedObjectId, next);
+    };
 
-    useEffect(() => {
-        if (!object) return;
-
-        object.position.set(
-            values.position.x,
-            values.position.y,
-            values.position.z
-        );
-
-        object.rotation.set(
-            values.rotation.x,
-            values.rotation.y,
-            values.rotation.z
-        );
-
-        object.scale.set(
-            values.scale.x,
-            values.scale.y,
-            values.scale.z
-        );
-    }, [object, values]);
 
     const transformationsPanelData = [
         {

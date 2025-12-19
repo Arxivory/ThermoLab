@@ -5,6 +5,7 @@ import { startRenderLoop } from "./renderLoop"
 import { setRendererContext } from "./sceneAccess"
 import { onCanvasClick } from "./raycaster"
 import { initTransformControls } from "./gizmos/transformControls"
+import { initSceneTransformSync } from "./sync/transformSync"
 
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
@@ -39,6 +40,8 @@ export function initRenderer(canvas: HTMLCanvasElement) {
   setupDefaultScene()
 
   initTransformControls()
+
+  initSceneTransformSync()
 
   canvas.addEventListener("pointerdown", onCanvasClick);
 

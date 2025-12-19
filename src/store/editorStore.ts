@@ -50,6 +50,11 @@ interface EditorState {
     closeModal: () => void;
 
     setTransformMode: (mode: TransformMode) => void;
+
+    updateObjectTransform: (
+        id: string, 
+        transform: SceneObject["transformations"]
+    ) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -95,6 +100,26 @@ export const useEditorStore = create<EditorState>()(
         openModal: (modal) => set({ activeModal: modal }),
         closeModal: () => set({ activeModal: "NONE" }),
 
-        setTransformMode: (mode) => set({ transformMode: mode })
+        setTransformMode: (mode) => set({ transformMode: mode }),
+
+        updateObjectTransform: (id, transform) =>
+            set((state) => {
+                const obj = state.objects[id];
+                if (!obj) return state;
+
+                return {
+                    objects: {
+                        ...state.objects,
+                        [id]: {
+                            ...obj,
+                            transformations: {
+                                position: { ...transform.position },
+                                rotation: { ...transform.rotation },
+                                scale: { ...transform.scale }
+                            }
+                        }
+                    }
+                }
+            })
     }))
 );

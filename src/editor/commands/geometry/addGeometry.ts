@@ -49,9 +49,11 @@ function addPlane() {
         name: "Plane",
         type: "PRIMITIVE",
         object: planeMesh,
-        position: planeMesh.position.clone(),
-        rotation: planeMesh.rotation.clone(),
-        scale: planeMesh.scale.clone()
+        transformations: {
+            position: { x: planeMesh.position.x, y: planeMesh.position.y, z: planeMesh.position.z },
+            rotation: { x: planeMesh.rotation.x, y: planeMesh.rotation.y, z: planeMesh.rotation.z },
+            scale: { x: planeMesh.scale.x, y: planeMesh.scale.y, z: planeMesh.scale.z }
+        }
     })
 }
 
@@ -66,9 +68,11 @@ function addCube() {
         name: "Cube",
         type: "PRIMITIVE",
         object: cubeMesh,
-        position: cubeMesh.position.clone(),
-        rotation: cubeMesh.rotation.clone(),
-        scale: cubeMesh.scale.clone()
+        transformations: {
+            position: { x: cubeMesh.position.x, y: cubeMesh.position.y, z: cubeMesh.position.z },
+            rotation: { x: cubeMesh.rotation.x, y: cubeMesh.rotation.y, z: cubeMesh.rotation.z },
+            scale: { x: cubeMesh.scale.x, y: cubeMesh.scale.y, z: cubeMesh.scale.z }
+        }
     });
 }
 
@@ -83,9 +87,11 @@ function addCircle() {
         name: "Circle",
         type: "PRIMITIVE",
         object: circleMesh,
-        position: circleMesh.position.clone(),
-        rotation: circleMesh.rotation.clone(),
-        scale: circleMesh.scale.clone()
+        transformations: {
+            position: { x: circleMesh.position.x, y: circleMesh.position.y, z: circleMesh.position.z },
+            rotation: { x: circleMesh.rotation.x, y: circleMesh.rotation.y, z: circleMesh.rotation.z },
+            scale: { x: circleMesh.scale.x, y: circleMesh.scale.y, z: circleMesh.scale.z }
+        }
     });
 }
 
@@ -100,9 +106,11 @@ function addSphere() {
         name: "Sphere",
         type: "PRIMITIVE",
         object: sphereMesh,
-        position: sphereMesh.position.clone(),
-        rotation: sphereMesh.rotation.clone(),
-        scale: sphereMesh.scale.clone()
+        transformations: {
+            position: { x: sphereMesh.position.x, y: sphereMesh.position.y, z: sphereMesh.position.z },
+            rotation: { x: sphereMesh.rotation.x, y: sphereMesh.rotation.y, z: sphereMesh.rotation.z },
+            scale: { x: sphereMesh.scale.x, y: sphereMesh.scale.y, z: sphereMesh.scale.z }
+        }
     });
 }
 
@@ -117,9 +125,11 @@ function addCylinder() {
         name: "Cylinder",
         type: "PRIMITIVE",
         object: cylinderMesh,
-        position: cylinderMesh.position.clone(),
-        rotation: cylinderMesh.rotation.clone(),
-        scale: cylinderMesh.scale.clone()
+        transformations: {
+            position: { x: cylinderMesh.position.x, y: cylinderMesh.position.y, z: cylinderMesh.position.z },
+            rotation: { x: cylinderMesh.rotation.x, y: cylinderMesh.rotation.y, z: cylinderMesh.rotation.z },
+            scale: { x: cylinderMesh.scale.x, y: cylinderMesh.scale.y, z: cylinderMesh.scale.z }
+        }
     });
 }
 
@@ -134,9 +144,11 @@ function addCone() {
         name: "Cone",
         type: "PRIMITIVE",
         object: coneMesh,
-        position: coneMesh.position.clone(),
-        rotation: coneMesh.rotation.clone(),
-        scale: coneMesh.scale.clone()
+        transformations: {
+            position: { x: coneMesh.position.x, y: coneMesh.position.y, z: coneMesh.position.z },
+            rotation: { x: coneMesh.rotation.x, y: coneMesh.rotation.y, z: coneMesh.rotation.z },
+            scale: { x: coneMesh.scale.x, y: coneMesh.scale.y, z: coneMesh.scale.z }
+        }
     });
 }
 
@@ -151,9 +163,11 @@ function addTorus() {
         name: "Torus",
         type: "PRIMITIVE",
         object: torusMesh,
-        position: torusMesh.position.clone(),
-        rotation: torusMesh.rotation.clone(),
-        scale: torusMesh.scale.clone()
+        transformations: {
+            position: { x: torusMesh.position.x, y: torusMesh.position.y, z: torusMesh.position.z },
+            rotation: { x: torusMesh.rotation.x, y: torusMesh.rotation.y, z: torusMesh.rotation.z },
+            scale: { x: torusMesh.scale.x, y: torusMesh.scale.y, z: torusMesh.scale.z }
+        }
     });
 }
 
