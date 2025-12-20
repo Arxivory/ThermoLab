@@ -25,11 +25,12 @@ export async function importObject(file: File) {
             roughness: 0.15,
             reflectivity: 0.3,
             envMap,
-            envMapIntensity: 1.0
+            envMapIntensity: 1.0,
+            transparent: true
         })
 
         object.traverse((child: THREE.Object3D) => {
-            if ((child as THREE.Mesh).isMesh) 
+            if ((child as THREE.Mesh).isMesh)  
                 (child as THREE.Mesh).material = defaultMaterial;
         })
 

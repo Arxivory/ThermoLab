@@ -35,7 +35,8 @@ function createPrimitiveMaterial(envMap: THREE.Texture) {
         roughness: 0.15,
         reflectivity: 0.3,
         envMap,
-        envMapIntensity: 1.0
+        envMapIntensity: 1.0,
+        transparent: true
     });
 }
 
@@ -56,7 +57,7 @@ function addPlane(envMap: THREE.Texture) {
             scale: { x: planeMesh.scale.x, y: planeMesh.scale.y, z: planeMesh.scale.z }
         },
         appearance: {
-            color: planeMesh.material.color,
+            color: toHexColor(planeMesh.material.color),
             roughness: planeMesh.material.roughness,
             metalness: planeMesh.material.metalness,
             reflectivity: planeMesh.material.reflectivity,
