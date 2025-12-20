@@ -141,7 +141,7 @@ export const useEditorStore = create<EditorState>()(
                                 color: appearance.color,
                                 roughness: appearance.roughness,
                                 metalness: appearance.metalness,
-                                reflectivity: appearance.metalness,
+                                reflectivity: appearance.reflectivity,
                                 opacity: appearance.opacity
                             }
                         }
