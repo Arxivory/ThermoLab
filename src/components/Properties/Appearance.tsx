@@ -10,6 +10,48 @@ const Appearance = () => {
         initSphere(canvasRef.current);
     })
 
+    const appearanceWrapperData = [
+        {
+            key: "color",
+            label: "Color",
+            placeHolder: "Enter Color value...",
+            inputType: "color"
+        },
+        {
+            key: "roughness",
+            label: "Roughness",
+            placeHolder: "Enter Roughness value...",
+            inputType: "number"
+        },
+        {
+            key: "metalness",
+            label: "Metalness",
+            placeHolder: "Enter Metalness value...",
+            inputType: "number"
+        }
+    ]
+
+    const appearanceData = [
+        {
+            key: "reflectivity",
+            label: "Reflectivity",
+            placeHolder: "Enter Reflectivity value...",
+            inputType: "number"
+        },
+        {
+            key: "opacity",
+            label: "Opacity",
+            placeHolder: "Enter Opacity value...",
+            inputType: "number"
+        },
+        {
+            key: "texture",
+            label: "Texture",
+            placeHolder: "Enter Texture...",
+            inputType: "file"
+        }
+    ]
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Appearance</span>
@@ -18,44 +60,24 @@ const Appearance = () => {
             <div className="wrapper">
                 <canvas ref={canvasRef} id="material-preview-canvas" className="material-preview-canvas"></canvas>
                 <div className="appearance-inputs-wrapper">
-                    <div className="property">
-                        <span className="property-name">
-                            Color:
-                        </span>
-                        <input type="text" placeholder="Enter Color..." className="property-input" />
-                    </div>
-                    <div className="property">
-                        <span className="property-name">
-                            Roughness:
-                        </span>
-                        <input type="text" placeholder="Enter Roughness..." className="property-input" />
-                    </div>
-                    <div className="property">
-                        <span className="property-name">
-                            Metalness:
-                        </span>
-                        <input type="text" placeholder="Enter Metalness..." className="property-input" />
-                    </div>
+                    {appearanceWrapperData.map((input, index) => (
+                        <div className="property" key={index}>
+                            <span className="property-name">
+                                {`${input.label}: `}
+                            </span>
+                            <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                        </div>
+                    ))}
                 </div>
             </div>
-            <div className="property">
-                <span className="property-name">
-                    Reflectivity:
-                </span>
-                <input type="text" placeholder="Enter Reflectivity..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Transparency:
-                </span>
-                <input type="text" placeholder="Enter Transparency..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Texture:
-                </span>
-                <input type="text" placeholder="Enter Texture..." className="property-input" />
-            </div>
+            {appearanceData.map((input, index) => (
+                <div className="property" key={index}>
+                    <span className="property-name">
+                        {`${input.label}: `}
+                    </span>
+                    <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                </div>
+            ))}
         </div>
     </div>
   )
