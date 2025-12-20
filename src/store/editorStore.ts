@@ -59,7 +59,7 @@ interface EditorState {
     updateObjectMaterial: (
         id: string,
         appearance: SceneObject["appearance"]
-    )
+    ) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
