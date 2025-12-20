@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { initSphere } from '../core/MaterialSphere';
+import { useEditorStore } from '../../store/editorStore';
+import { toHexColor, toSceneColor } from '../../utils/colorDataConverters';
 
 const Appearance = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -8,7 +10,58 @@ const Appearance = () => {
         if (!canvasRef.current) return;
 
         initSphere(canvasRef.current);
-    })
+    }, []);
+
+    const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
+    const updateObjectMaterial = useEditorStore((s) => s.updateObjectMaterial);
+
+    const currentAppearance = useEditorStore((s) =>
+        selectedObjectId ? s.objects[selectedObjectId]?.appearance : null
+    );
+
+    const [appearance, setAppearance] = useState({
+        color: "#ffffff",
+        metalness: 0.78,
+        roughness: 0.15,
+        reflectivity: 0.3,
+        opacity: 1.0
+    });
+
+    useEffect(() => {
+        if (!currentAppearance) return;
+
+        setAppearance({
+            color: toHexColor(currentAppearance.color),
+            metalness: currentAppearance.metalness,
+            roughness: currentAppearance.roughness,
+            reflectivity: currentAppearance.reflectivity,
+            opacity: currentAppearance.opacity
+        });
+    });
+
+    const handleChange = (
+        input: string,
+        newVal: string
+    ) => {
+        if (!selectedObjectId) return;
+
+        const next = {
+            ...appearance,
+            [input]: input === "color" ? 
+                toSceneColor(newVal) :
+                Number(newVal)
+        };
+
+        setAppearance({
+            ...appearance,
+            [input]: input === "color" ?
+                newVal :
+                Number(newVal)
+        })
+
+        updateObjectMaterial(selectedObjectId, next);
+
+    }
 
     const appearanceWrapperData = [
         {
@@ -43,12 +96,6 @@ const Appearance = () => {
             label: "Opacity",
             placeHolder: "Enter Opacity value...",
             inputType: "number"
-        },
-        {
-            key: "texture",
-            label: "Texture",
-            placeHolder: "Enter Texture...",
-            inputType: "file"
         }
     ]
 
@@ -65,7 +112,14 @@ const Appearance = () => {
                             <span className="property-name">
                                 {`${input.label}: `}
                             </span>
-                            <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                            <input type={input.inputType} 
+                                placeholder={input.placeHolder} 
+                                value={appearance[input.key]}
+                                className="property-input" 
+                                onChange={(e) =>
+                                    handleChange(input.key, e.target.value)
+                                }
+                            />
                         </div>
                     ))}
                 </div>
@@ -75,7 +129,14 @@ const Appearance = () => {
                     <span className="property-name">
                         {`${input.label}: `}
                     </span>
-                    <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                    <input type={input.inputType} 
+                        placeholder={input.placeHolder} 
+                        value={appearance[input.key]}
+                        className="property-input" 
+                        onChange={(e) => 
+                            handleChange(input.key, e.target.value)
+                        }
+                    />
                 </div>
             ))}
         </div>
