@@ -31,13 +31,13 @@ const Appearance = () => {
         if (!currentAppearance) return;
 
         setAppearance({
-            color: toHexColor(currentAppearance.color),
+            color: currentAppearance.color,
             metalness: currentAppearance.metalness,
             roughness: currentAppearance.roughness,
             reflectivity: currentAppearance.reflectivity,
             opacity: currentAppearance.opacity
         });
-    });
+    }, [currentAppearance]);
 
     const handleChange = (
         input: string,
@@ -48,7 +48,7 @@ const Appearance = () => {
         const next = {
             ...appearance,
             [input]: input === "color" ? 
-                toSceneColor(newVal) :
+                newVal :
                 Number(newVal)
         };
 
@@ -115,6 +115,7 @@ const Appearance = () => {
                             <input type={input.inputType} 
                                 placeholder={input.placeHolder} 
                                 value={appearance[input.key]}
+                                step={0.01}
                                 className="property-input" 
                                 onChange={(e) =>
                                     handleChange(input.key, e.target.value)
@@ -132,6 +133,7 @@ const Appearance = () => {
                     <input type={input.inputType} 
                         placeholder={input.placeHolder} 
                         value={appearance[input.key]}
+                        step={0.01}
                         className="property-input" 
                         onChange={(e) => 
                             handleChange(input.key, e.target.value)

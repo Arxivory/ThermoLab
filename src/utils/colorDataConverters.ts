@@ -5,5 +5,5 @@ export function toSceneColor(hex: string) {
 }
 
 export function toHexColor(sceneColor: THREE.Color) {
-    return sceneColor.getHexString();
+    return `#${sceneColor.getHexString()}`;
 }

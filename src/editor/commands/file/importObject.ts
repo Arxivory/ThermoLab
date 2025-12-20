@@ -5,6 +5,7 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js"
 import { addObjectToScene } from "../../../components/core/sceneController";
 import { getEnvironmentMap } from "../../../components/core/renderer/environmentManager";
 import { getRenderer } from "../../../components/core/renderer/sceneAccess";
+import { toHexColor } from "../../../utils/colorDataConverters";
 
 const loader = new OBJLoader();
 
@@ -45,7 +46,7 @@ export async function importObject(file: File) {
                 scale: { x: object.scale.x, y: object.scale.y, z: object.scale.z }
             },
             appearance: {
-                color: defaultMaterial.color,
+                color: toHexColor(defaultMaterial.color),
                 roughness: defaultMaterial.roughness,
                 metalness: defaultMaterial.metalness,
                 reflectivity: defaultMaterial.metalness,

@@ -18,7 +18,7 @@ export interface SceneObject {
     }
 
     appearance: {
-        color: THREE.Color,
+        color: string,
         roughness: number,
         metalness: number,
         reflectivity: number,
