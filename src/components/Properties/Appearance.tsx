@@ -40,6 +40,12 @@ const Appearance = () => {
             </div>
             <div className="property">
                 <span className="property-name">
+                    Reflectivity:
+                </span>
+                <input type="text" placeholder="Enter Reflectivity..." className="property-input" />
+            </div>
+            <div className="property">
+                <span className="property-name">
                     Transparency:
                 </span>
                 <input type="text" placeholder="Enter Transparency..." className="property-input" />

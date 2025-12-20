@@ -43,6 +43,13 @@ export async function importObject(file: File) {
                 position: { x: object.position.x, y: object.position.y, z: object.position.z },
                 rotation: { x: object.rotation.x, y: object.rotation.y, z: object.rotation.z },
                 scale: { x: object.scale.x, y: object.scale.y, z: object.scale.z }
+            },
+            appearance: {
+                color: defaultMaterial.color,
+                roughness: defaultMaterial.roughness,
+                metalness: defaultMaterial.metalness,
+                reflectivity: defaultMaterial.metalness,
+                opacity: defaultMaterial.opacity
             }
         });
     };

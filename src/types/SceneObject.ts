@@ -16,4 +16,12 @@ export interface SceneObject {
         rotation: { x: number, y: number, z: number },
         scale: { x: number, y: number, z: number }
     }
+
+    appearance: {
+        color: THREE.Color,
+        roughness: number,
+        metalness: number,
+        reflectivity: number,
+        opacity: number
+    }
 }

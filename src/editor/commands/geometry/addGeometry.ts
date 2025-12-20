@@ -53,6 +53,13 @@ function addPlane(envMap: THREE.Texture) {
             position: { x: planeMesh.position.x, y: planeMesh.position.y, z: planeMesh.position.z },
             rotation: { x: planeMesh.rotation.x, y: planeMesh.rotation.y, z: planeMesh.rotation.z },
             scale: { x: planeMesh.scale.x, y: planeMesh.scale.y, z: planeMesh.scale.z }
+        },
+        appearance: {
+            color: planeMesh.material.color,
+            roughness: planeMesh.material.roughness,
+            metalness: planeMesh.material.metalness,
+            reflectivity: planeMesh.material.reflectivity,
+            opacity: planeMesh.material.opacity
         }
     })
 }
@@ -72,6 +79,13 @@ function addCube(envMap: THREE.Texture) {
             position: { x: cubeMesh.position.x, y: cubeMesh.position.y, z: cubeMesh.position.z },
             rotation: { x: cubeMesh.rotation.x, y: cubeMesh.rotation.y, z: cubeMesh.rotation.z },
             scale: { x: cubeMesh.scale.x, y: cubeMesh.scale.y, z: cubeMesh.scale.z }
+        },
+        appearance: {
+            color: cubeMesh.material.color,
+            roughness: cubeMesh.material.roughness,
+            metalness: cubeMesh.material.metalness,
+            reflectivity: cubeMesh.material.reflectivity,
+            opacity: cubeMesh.material.opacity
         }
     });
 }
@@ -91,6 +105,13 @@ function addCircle(envMap: THREE.Texture) {
             position: { x: circleMesh.position.x, y: circleMesh.position.y, z: circleMesh.position.z },
             rotation: { x: circleMesh.rotation.x, y: circleMesh.rotation.y, z: circleMesh.rotation.z },
             scale: { x: circleMesh.scale.x, y: circleMesh.scale.y, z: circleMesh.scale.z }
+        },
+        appearance: {
+            color: circleMesh.material.color,
+            roughness: circleMesh.material.roughness,
+            metalness: circleMesh.material.metalness,
+            reflectivity: circleMesh.material.reflectivity,
+            opacity: circleMesh.material.opacity
         }
     });
 }
@@ -110,6 +131,13 @@ function addSphere(envMap: THREE.Texture) {
             position: { x: sphereMesh.position.x, y: sphereMesh.position.y, z: sphereMesh.position.z },
             rotation: { x: sphereMesh.rotation.x, y: sphereMesh.rotation.y, z: sphereMesh.rotation.z },
             scale: { x: sphereMesh.scale.x, y: sphereMesh.scale.y, z: sphereMesh.scale.z }
+        },
+        appearance: {
+            color: sphereMesh.material.color,
+            roughness: sphereMesh.material.roughness,
+            metalness: sphereMesh.material.metalness,
+            reflectivity: sphereMesh.material.reflectivity,
+            opacity: sphereMesh.material.opacity
         }
     });
 }
@@ -129,6 +157,13 @@ function addCylinder(envMap: THREE.Texture) {
             position: { x: cylinderMesh.position.x, y: cylinderMesh.position.y, z: cylinderMesh.position.z },
             rotation: { x: cylinderMesh.rotation.x, y: cylinderMesh.rotation.y, z: cylinderMesh.rotation.z },
             scale: { x: cylinderMesh.scale.x, y: cylinderMesh.scale.y, z: cylinderMesh.scale.z }
+        },
+        appearance: {
+            color: cylinderMesh.material.color,
+            roughness: cylinderMesh.material.roughness,
+            metalness: cylinderMesh.material.metalness,
+            reflectivity: cylinderMesh.material.reflectivity,
+            opacity: cylinderMesh.material.opacity
         }
     });
 }
@@ -148,6 +183,13 @@ function addCone(envMap: THREE.Texture) {
             position: { x: coneMesh.position.x, y: coneMesh.position.y, z: coneMesh.position.z },
             rotation: { x: coneMesh.rotation.x, y: coneMesh.rotation.y, z: coneMesh.rotation.z },
             scale: { x: coneMesh.scale.x, y: coneMesh.scale.y, z: coneMesh.scale.z }
+        },
+        appearance: {
+            color: coneMesh.material.color,
+            roughness: coneMesh.material.roughness,
+            metalness: coneMesh.material.metalness,
+            reflectivity: coneMesh.material.reflectivity,
+            opacity: coneMesh.material.opacity
         }
     });
 }
@@ -167,6 +209,13 @@ function addTorus(envMap: THREE.Texture) {
             position: { x: torusMesh.position.x, y: torusMesh.position.y, z: torusMesh.position.z },
             rotation: { x: torusMesh.rotation.x, y: torusMesh.rotation.y, z: torusMesh.rotation.z },
             scale: { x: torusMesh.scale.x, y: torusMesh.scale.y, z: torusMesh.scale.z }
+        },
+        appearance: {
+            color: torusMesh.material.color,
+            roughness: torusMesh.material.roughness,
+            metalness: torusMesh.material.metalness,
+            reflectivity: torusMesh.material.reflectivity,
+            opacity: torusMesh.material.opacity
         }
     });
 }
