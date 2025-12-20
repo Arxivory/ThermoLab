@@ -50,7 +50,7 @@ export async function importObject(file: File) {
                 color: toHexColor(defaultMaterial.color),
                 roughness: defaultMaterial.roughness,
                 metalness: defaultMaterial.metalness,
-                reflectivity: defaultMaterial.metalness,
+                reflectivity: defaultMaterial.reflectivity,
                 opacity: defaultMaterial.opacity
             }
         });
