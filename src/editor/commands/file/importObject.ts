@@ -54,8 +54,6 @@ export async function importObject(file: File) {
         object.name = file.name;
 
         const envMap = await getEnvironmentMap(getRenderer());
-        
-        object.traverse((child: THREE.Object3D) => console.log(child));
 
         const meshes: THREE.Mesh[] = [];
 
