@@ -9,6 +9,42 @@ import { toHexColor } from "../../../utils/colorDataConverters";
 
 const loader = new OBJLoader();
 
+function createMeshMaterial(envMap: THREE.Texture) {
+    return new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.78,
+        roughness: 0.15,
+        reflectivity: 0.3,
+        envMap,
+        envMapIntensity: 1.0,
+        transparent: true
+    });
+}
+
+function handleMesh(mesh: THREE.Mesh, envMap: THREE.Texture) {
+    mesh.material = createMeshMaterial(envMap);
+
+    addObjectToScene(mesh);
+    useEditorStore.getState().addObject({
+        id: uuid(),
+        name: !mesh.name ? "Mesh" : mesh.name,
+        type: "IMPORTED",
+        object: mesh,
+        transformations: {
+            position: { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z },
+            rotation: { x: mesh.rotation.x, y: mesh.rotation.y, z: mesh.rotation.z },
+            scale: { x: mesh.scale.x, y: mesh.scale.y, z: mesh.scale.z }
+        },
+        appearance: {
+            color: toHexColor(mesh.material.color),
+            roughness: mesh.material.roughness,
+            metalness: mesh.material.metalness,
+            reflectivity: mesh.material.reflectivity,
+            opacity: mesh.material.opacity
+        }
+    });
+}
+
 export async function importObject(file: File) {
     const reader = new FileReader();
 
@@ -18,42 +54,21 @@ export async function importObject(file: File) {
         object.name = file.name;
 
         const envMap = await getEnvironmentMap(getRenderer());
+        
+        object.traverse((child: THREE.Object3D) => console.log(child));
 
-        const defaultMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff,
-            metalness: 0.78,
-            roughness: 0.15,
-            reflectivity: 0.3,
-            envMap,
-            envMapIntensity: 1.0,
-            transparent: true
-        })
+        const meshes: THREE.Mesh[] = [];
 
         object.traverse((child: THREE.Object3D) => {
-            if ((child as THREE.Mesh).isMesh)  
-                (child as THREE.Mesh).material = defaultMaterial;
-        })
-
-        addObjectToScene(object);
-
-        useEditorStore.getState().addObject({
-            id: uuid(),
-            name: file.name,
-            type: "IMPORTED",
-            object: object,
-            transformations: {
-                position: { x: object.position.x, y: object.position.y, z: object.position.z },
-                rotation: { x: object.rotation.x, y: object.rotation.y, z: object.rotation.z },
-                scale: { x: object.scale.x, y: object.scale.y, z: object.scale.z }
-            },
-            appearance: {
-                color: toHexColor(defaultMaterial.color),
-                roughness: defaultMaterial.roughness,
-                metalness: defaultMaterial.metalness,
-                reflectivity: defaultMaterial.reflectivity,
-                opacity: defaultMaterial.opacity
+            if (child instanceof THREE.Mesh) {
+                meshes.push(child);
             }
         });
+
+        for (const mesh of meshes) {
+            handleMesh(mesh, envMap);
+        }
+
     };
 
     reader.readAsText(file);
