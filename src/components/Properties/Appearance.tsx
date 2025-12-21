@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useEditorStore } from '../../store/editorStore';
-import { initMaterialPreview } from '../core/renderer/material/materialPreview';
+import { initMaterialPreview, updateMaterialPreview } from '../core/renderer/material/materialPreview';
 
 const Appearance = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -27,7 +27,7 @@ const Appearance = () => {
     });
 
     useEffect(() => {
-        if (!currentAppearance) return;
+        if (!currentAppearance || !selectedObjectId) return;
 
         setAppearance({
             color: currentAppearance.color,
@@ -36,6 +36,8 @@ const Appearance = () => {
             reflectivity: currentAppearance.reflectivity,
             opacity: currentAppearance.opacity
         });
+
+        updateMaterialPreview(selectedObjectId);
     }, [currentAppearance]);
 
     const handleChange = (
@@ -59,6 +61,7 @@ const Appearance = () => {
         })
 
         updateObjectMaterial(selectedObjectId, next);
+        updateMaterialPreview(selectedObjectId);
 
     }
 

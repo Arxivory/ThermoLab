@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { createPreviewSphere } from "./previewSphere";
+import { createLighting, createPreviewSphere, updatePreview } from "./previewSphere";
 
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
@@ -23,7 +23,13 @@ export function initMaterialPreview(canvas: HTMLCanvasElement) {
 
     renderer.setSize(width, height, false);
 
+    createLighting(scene);
     createPreviewSphere(scene);
 
     renderer.render(scene, camera);
+}
+
+export function updateMaterialPreview(id: string) {
+    if (!(renderer && scene && camera)) return;
+    updatePreview(id, renderer, scene, camera);
 }

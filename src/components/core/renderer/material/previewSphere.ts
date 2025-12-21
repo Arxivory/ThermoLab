@@ -24,11 +24,18 @@ export function createPreviewSphere(scene: THREE.Scene) {
     scene.add(sphere);
 }
 
-export function updatePreview() {
-    const store = useEditorStore.getState();
+export function createLighting(scene: THREE.Scene) {
+    const dirLight = new THREE.PointLight(0xffffff, 1);
+    dirLight.position.set(2, 3, 3);
+    scene.add(dirLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
+}
 
-    const id = store.selectedObjectId;
-    if (!id) return;
+export function updatePreview(id: string, renderer: THREE.WebGLRenderer, 
+    scene: THREE.Scene, 
+    camera: THREE.PerspectiveCamera) {
+    const store = useEditorStore.getState();
 
     const newMaterial = store.objects[id].appearance;
 
@@ -36,5 +43,7 @@ export function updatePreview() {
     material.roughness = newMaterial.roughness;
     material.metalness = newMaterial.metalness;
     material.reflectivity = newMaterial.reflectivity;
-    material.opacity = newMaterial.reflectivity;
+    material.opacity = newMaterial.opacity;
+
+    renderer.render(scene, camera);
 }
