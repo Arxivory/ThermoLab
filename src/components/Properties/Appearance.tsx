@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { initSphere } from '../core/MaterialSphere';
 import { useEditorStore } from '../../store/editorStore';
-import { toHexColor, toSceneColor } from '../../utils/colorDataConverters';
+import { initMaterialPreview } from '../core/renderer/material/materialPreview';
 
 const Appearance = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -9,7 +8,7 @@ const Appearance = () => {
     useEffect(() => {
         if (!canvasRef.current) return;
 
-        initSphere(canvasRef.current);
+        initMaterialPreview(canvasRef.current);
     }, []);
 
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
