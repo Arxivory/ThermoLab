@@ -6,6 +6,7 @@ let material: THREE.MeshPhysicalMaterial;
 let sphere: THREE.Mesh;
 
 export function createPreviewSphere(scene: THREE.Scene) {
+
     if (!material) {
         material = new THREE.MeshPhysicalMaterial({
             color: 0xffffff,

@@ -28,7 +28,7 @@ export async function addGeometry(geometryType: string) {
     }
 }
 
-function createPrimitiveMaterial(envMap: THREE.Texture) {
+function createPrimitiveAppearance(envMap: THREE.Texture) {
     return new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         metalness: 0.78,
@@ -40,9 +40,20 @@ function createPrimitiveMaterial(envMap: THREE.Texture) {
     });
 }
 
+function createGenericMaterial() {
+    return {
+        density: 2000,
+        specificHeat: 1000,
+        thermalConductivity: 10,
+        elasticModulus: 1e9,
+        emissivity: 0.8,
+        absorptivity: 0.8
+    }
+}
+
 function addPlane(envMap: THREE.Texture) {
     const planeGeometry = new THREE.PlaneGeometry(1, 1);
-    const planeMesh = new THREE.Mesh(planeGeometry, createPrimitiveMaterial(envMap));
+    const planeMesh = new THREE.Mesh(planeGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(planeMesh);
 
@@ -62,13 +73,14 @@ function addPlane(envMap: THREE.Texture) {
             metalness: planeMesh.material.metalness,
             reflectivity: planeMesh.material.reflectivity,
             opacity: planeMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     })
 }
 
 function addCube(envMap: THREE.Texture) {
     const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const cubeMesh = new THREE.Mesh(cubeGeometry, createPrimitiveMaterial(envMap));
+    const cubeMesh = new THREE.Mesh(cubeGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(cubeMesh);
 
@@ -88,13 +100,14 @@ function addCube(envMap: THREE.Texture) {
             metalness: cubeMesh.material.metalness,
             reflectivity: cubeMesh.material.reflectivity,
             opacity: cubeMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 
 function addCircle(envMap: THREE.Texture) {
     const circleGeometry = new THREE.CircleGeometry(1, 30);
-    const circleMesh = new THREE.Mesh(circleGeometry, createPrimitiveMaterial(envMap));
+    const circleMesh = new THREE.Mesh(circleGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(circleMesh);
 
@@ -114,13 +127,14 @@ function addCircle(envMap: THREE.Texture) {
             metalness: circleMesh.material.metalness,
             reflectivity: circleMesh.material.reflectivity,
             opacity: circleMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 
 function addSphere(envMap: THREE.Texture) {
     const sphereGeometry = new THREE.SphereGeometry(1, 30, 30);
-    const sphereMesh = new THREE.Mesh(sphereGeometry, createPrimitiveMaterial(envMap));
+    const sphereMesh = new THREE.Mesh(sphereGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(sphereMesh);
 
@@ -140,13 +154,14 @@ function addSphere(envMap: THREE.Texture) {
             metalness: sphereMesh.material.metalness,
             reflectivity: sphereMesh.material.reflectivity,
             opacity: sphereMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 
 function addCylinder(envMap: THREE.Texture) {
     const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 1, 30);
-    const cylinderMesh = new THREE.Mesh(cylinderGeometry, createPrimitiveMaterial(envMap));
+    const cylinderMesh = new THREE.Mesh(cylinderGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(cylinderMesh);
 
@@ -166,13 +181,14 @@ function addCylinder(envMap: THREE.Texture) {
             metalness: cylinderMesh.material.metalness,
             reflectivity: cylinderMesh.material.reflectivity,
             opacity: cylinderMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 
 function addCone(envMap: THREE.Texture) {
     const coneGeometry = new THREE.ConeGeometry(1, 1, 30);
-    const coneMesh = new THREE.Mesh(coneGeometry, createPrimitiveMaterial(envMap));
+    const coneMesh = new THREE.Mesh(coneGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(coneMesh);
 
@@ -192,13 +208,14 @@ function addCone(envMap: THREE.Texture) {
             metalness: coneMesh.material.metalness,
             reflectivity: coneMesh.material.reflectivity,
             opacity: coneMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 
 function addTorus(envMap: THREE.Texture) {
     const torusGeometry = new THREE.TorusGeometry(1, 1, 30);
-    const torusMesh = new THREE.Mesh(torusGeometry, createPrimitiveMaterial(envMap));
+    const torusMesh = new THREE.Mesh(torusGeometry, createPrimitiveAppearance(envMap));
 
     addObjectToScene(torusMesh);
 
@@ -218,7 +235,8 @@ function addTorus(envMap: THREE.Texture) {
             metalness: torusMesh.material.metalness,
             reflectivity: torusMesh.material.reflectivity,
             opacity: torusMesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 

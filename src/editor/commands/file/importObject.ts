@@ -9,7 +9,7 @@ import { toHexColor } from "../../../utils/colorDataConverters";
 
 const loader = new OBJLoader();
 
-function createMeshMaterial(envMap: THREE.Texture) {
+function createPrimitiveAppearance(envMap: THREE.Texture) {
     return new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         metalness: 0.78,
@@ -21,8 +21,19 @@ function createMeshMaterial(envMap: THREE.Texture) {
     });
 }
 
+function createGenericMaterial() {
+    return {
+        density: 2000,
+        specificHeat: 1000,
+        thermalConductivity: 10,
+        elasticModulus: 1e9,
+        emissivity: 0.8,
+        absorptivity: 0.8
+    }
+}
+
 function handleMesh(mesh: THREE.Mesh, envMap: THREE.Texture) {
-    mesh.material = createMeshMaterial(envMap);
+    mesh.material = createPrimitiveAppearance(envMap);
 
     addObjectToScene(mesh);
     useEditorStore.getState().addObject({
@@ -41,7 +52,8 @@ function handleMesh(mesh: THREE.Mesh, envMap: THREE.Texture) {
             metalness: mesh.material.metalness,
             reflectivity: mesh.material.reflectivity,
             opacity: mesh.material.opacity
-        }
+        },
+        material: { ...createGenericMaterial() }
     });
 }
 

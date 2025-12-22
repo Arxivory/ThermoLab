@@ -24,4 +24,13 @@ export interface SceneObject {
         reflectivity: number,
         opacity: number
     }
+
+    material: {
+        density: number,
+        specificHeat: number,
+        thermalConductivity: number,
+        elasticModulus: number,
+        emissivity: number,
+        absorptivity: number
+    }
 }
