@@ -1,45 +1,62 @@
 const Material = () => {
+    const materialData = [
+        {
+            key: "density",
+            label: "Density",
+            symbol: "\u03C1",
+            placeHolder: "Enter Density value...",
+            inputType: "number"
+        },
+        {
+            key: "elasticModulus",
+            label: "Elastic Modulus",
+            symbol: "E",
+            placeHolder: "Enter Elastic Modulus value...",
+            inputType: "number"
+        },
+        {
+            key: "specificHeat",
+            label: "Specific Heat",
+            symbol: "c",
+            placeHolder: "Enter Specific Heat value...",
+            inputType: "number"
+        },
+        {
+            key: "thermalConductivity",
+            label: "Thermal Conductivity",
+            symbol: "k",
+            placeHolder: "Enter Thermal Conductivity value...",
+            inputType: "number"
+        },
+        {
+            key: "emissivity",
+            label: "Emissivity",
+            symbol: "\u03B5",
+            placeHolder: "Enter Emissivity value...",
+            inputType: "number"
+        },
+        {
+            key: "absorptivity",
+            label: "Absorptivity",
+            symbol: "\u03B1",
+            placeHolder: "Enter Absorptivity value...",
+            inputType: "number"
+        },
+    ];
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Material</span>
 
         <div className="subpanel-container material">
-            <div className="property">
-                <span className="property-name">
-                    Density (ρ):
-                </span>
-                <input type="text" placeholder="Enter Transparency..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Elastic Modulus (E):
-                </span>
-                <input type="text" placeholder="Enter Elastic Modulus..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Specific Heat (c):
-                </span>
-                <input type="text" placeholder="Enter Specific Heat..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Thermal Conductivity (k):
-                </span>
-                <input type="text" placeholder="Enter Thermal Conductivity..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Emissivity (ε):
-                </span>
-                <input type="text" placeholder="Enter Emissivity..." className="property-input" />
-            </div>
-            <div className="property">
-                <span className="property-name">
-                    Absorptivity (α):
-                </span>
-                <input type="text" placeholder="Enter Absorptivity..." className="property-input" />
-            </div>
+            {materialData.map((input, index) => (
+                <div className="property">
+                    <span className="property-name">
+                        {`${input.label} (${input.symbol}):`}
+                    </span>
+                    <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                </div>
+            ))}
         </div>
     </div>
   )
