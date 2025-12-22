@@ -56,10 +56,12 @@ interface EditorState {
         transform: SceneObject["transformations"]
     ) => void;
 
-    updateObjectMaterial: (
+    updateObjectAppearance: (
         id: string,
         appearance: SceneObject["appearance"]
     ) => void;
+
+
 }
 
 export const useEditorStore = create<EditorState>()(
@@ -127,7 +129,7 @@ export const useEditorStore = create<EditorState>()(
                 }
             }),
 
-        updateObjectMaterial: (id, appearance) => 
+        updateObjectAppearance: (id, appearance) => 
             set((state) => {
                 const obj = state.objects[id];
                 if (!obj) return state;

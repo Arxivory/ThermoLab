@@ -12,7 +12,7 @@ const Appearance = () => {
     }, []);
 
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
-    const updateObjectMaterial = useEditorStore((s) => s.updateObjectMaterial);
+    const updateObjectAppearance = useEditorStore((s) => s.updateObjectAppearance);
 
     const currentAppearance = useEditorStore((s) =>
         selectedObjectId ? s.objects[selectedObjectId]?.appearance : null
@@ -60,7 +60,7 @@ const Appearance = () => {
                 Number(newVal)
         })
 
-        updateObjectMaterial(selectedObjectId, next);
+        updateObjectAppearance(selectedObjectId, next);
         updateMaterialPreview(selectedObjectId);
 
     }
