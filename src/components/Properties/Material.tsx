@@ -50,7 +50,7 @@ const Material = () => {
 
         <div className="subpanel-container material">
             {materialData.map((input, index) => (
-                <div className="property">
+                <div className="property" key={index}>
                     <span className="property-name">
                         {`${input.label} (${input.symbol}):`}
                     </span>
