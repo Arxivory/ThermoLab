@@ -27,7 +27,7 @@ const Appearance = () => {
     });
 
     useEffect(() => {
-        if (!currentAppearance || !selectedObjectId) return;
+        if (!(currentAppearance && selectedObjectId)) return;
 
         setAppearance({
             color: currentAppearance.color,

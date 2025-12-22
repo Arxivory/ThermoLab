@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useEditorStore } from "../../store/editorStore";
 
 const Material = () => {
     const materialData = [
@@ -45,6 +47,45 @@ const Material = () => {
         },
     ];
 
+    const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
+    const updateObjectMaterial = useEditorStore((s) => s.updateObjectMaterial);
+
+    const currentMaterial = useEditorStore((s) =>
+        selectedObjectId ? s.objects[selectedObjectId]?.material : null
+    );
+
+    const [material, setMaterial] = useState({
+        density: 2000,
+        specificHeat: 1000,
+        thermalConductivity: 10,
+        elasticModulus: 1e9,
+        emissivity: 0.8,
+        absorptivity: 0.8
+    });
+
+    useEffect(() => {
+        if (!(currentMaterial && selectedObjectId)) return;
+
+        setMaterial({ ...currentMaterial });
+
+    }, [currentMaterial]);
+
+    const handleChange = (
+        input: string,
+        newVal: string
+    ) => {
+        if (!selectedObjectId) return;
+
+        const next = {
+            ...material,
+            [input]: Number(newVal)
+        };
+
+        setMaterial(next);
+
+        updateObjectMaterial(selectedObjectId, next);
+    };
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Material</span>
@@ -55,7 +96,13 @@ const Material = () => {
                     <span className="property-name">
                         {`${input.label} (${input.symbol}):`}
                     </span>
-                    <input type={input.inputType} placeholder={input.placeHolder} className="property-input" />
+                    <input type={input.inputType} 
+                        placeholder={input.placeHolder} 
+                        value={material[input.key]}
+                        step={0.1}
+                        className="property-input" 
+                        onChange={(e) => handleChange(input.key, e.target.value)}
+                    />
                 </div>
             ))}
         </div>
