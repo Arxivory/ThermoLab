@@ -4,6 +4,17 @@ export type SceneObjectType =
     | "PRIMITIVE"
     | "IMPORTED"
 
+export type ObjectTags = 
+    | "TEMPERATURE"
+    | "INTERNAL_HEAT"
+    | "CONVECTION"
+    | "HEAT_FLUX"
+    | "INSULATION"
+    | "RADIATION"
+    | "ANGULAR_VELOCITY"
+    | "LINEAR_VELOCITY"
+    | "FORCE"
+
 export interface SceneObject {
     id: string;
     name: string;
