@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useEditorStore } from '../../store/editorStore';
-import { initMaterialPreview, updateMaterialPreview } from '../core/renderer/material/materialPreview';
+import { initMaterialPreview, updateMaterialPreview } from '../../core/renderer/material/materialPreview';
 
 const Appearance = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);

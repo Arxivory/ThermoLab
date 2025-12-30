@@ -1,6 +1,6 @@
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { getCamera, getControls, getRenderer, getScene } from "../sceneAccess";
-import { useEditorStore } from "../../../../store/editorStore";
+import { useEditorStore } from "../../../store/editorStore";
 
 let transformControls: TransformControls | null = null;
 

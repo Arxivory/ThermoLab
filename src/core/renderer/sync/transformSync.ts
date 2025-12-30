@@ -1,4 +1,4 @@
-import { useEditorStore } from "../../../../store/editorStore";
+import { useEditorStore } from "../../../store/editorStore";
 
 export function initSceneTransformSync() {
   useEditorStore.subscribe(

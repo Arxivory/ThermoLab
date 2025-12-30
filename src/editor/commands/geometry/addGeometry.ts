@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { v4 as uuid } from "uuid";
 import { useEditorStore } from "../../../store/editorStore";
-import { addObjectToScene } from "../../../components/core/sceneController";
-import { getEnvironmentMap } from "../../../components/core/renderer/environmentManager";
-import { getRenderer } from "../../../components/core/renderer/sceneAccess";
+import { addObjectToScene } from "../../../core/sceneController";
+import { getEnvironmentMap } from "../../../core/renderer/environmentManager";
+import { getRenderer } from "../../../core/renderer/sceneAccess";
 import { toHexColor } from "../../../utils/colorDataConverters";
 
 export async function addGeometry(geometryType: string) {

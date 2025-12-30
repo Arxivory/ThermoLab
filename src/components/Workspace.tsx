@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from "react"
-import { initRenderer } from "./core/renderer/renderer"
+import { initRenderer } from "../core/renderer/renderer"
 
 interface Props {
   canvasRef: RefObject<HTMLCanvasElement | null>

@@ -1,6 +1,6 @@
 import * as THREE from "three"
-import { useEditorStore } from "../../../../store/editorStore";
-import { toSceneColor } from "../../../../utils/colorDataConverters";
+import { useEditorStore } from "../../../store/editorStore";
+import { toSceneColor } from "../../../utils/colorDataConverters";
 
 let material: THREE.MeshPhysicalMaterial;
 let sphere: THREE.Mesh;

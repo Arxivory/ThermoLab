@@ -1,5 +1,5 @@
-import { useEditorStore } from "../../../../store/editorStore";
-import { toSceneColor } from "../../../../utils/colorDataConverters";
+import { useEditorStore } from "../../../store/editorStore";
+import { toSceneColor } from "../../../utils/colorDataConverters";
 
 export function initAppearanceSync() {
     useEditorStore.subscribe(

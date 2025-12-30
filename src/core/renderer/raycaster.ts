@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { getCamera } from "./sceneAccess";
-import { useEditorStore } from "../../../store/editorStore";
+import { useEditorStore } from "../../store/editorStore";
 import { getTransformControls } from "./gizmos/transformControls";
 
 const raycaster = new THREE.Raycaster();
