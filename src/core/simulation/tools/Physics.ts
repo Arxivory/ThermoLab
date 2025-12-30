@@ -9,6 +9,7 @@ export type PhysicsToolType =
     | "LINEAR_VELOCITY"
     | "FORCE"
     | "INLET_VELOCITY"
+    | "OUTLET"
     | "PRESSURE"
 
 export interface PhysicsToolBase<T extends PhysicsToolType, P> {
