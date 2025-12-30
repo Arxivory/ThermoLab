@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { SceneObject } from "../types/SceneObject";
 import { subscribeWithSelector } from "zustand/middleware";
+import type { PhysicsToolInstance } from "../core/simulation/tools";
 
 export type ViewMode = 
     | "SINGLE"
@@ -22,6 +23,7 @@ export type TransformMode =
 interface EditorState {
     activeCategory: "HOME" | "TOOLS"
     selectedObjectId: string | null;
+    selectedToolId: string | null;
 
     viewMode: ViewMode
     gridEnabled: boolean
@@ -33,6 +35,7 @@ interface EditorState {
     importedFile: File | null
 
     objects: Record<string, SceneObject>
+    tools: Record<string, PhysicsToolInstance>
 
     transformMode: TransformMode;
 
@@ -65,12 +68,22 @@ interface EditorState {
         id: string,
         material: SceneObject["material"]
     ) => void;
+
+    addTool: (tool: PhysicsToolInstance) => void;
+    updateTool: (
+        id: string,
+        updater: (tool: PhysicsToolInstance) => PhysicsToolInstance
+    ) => void;
+
+    toggleTool: (id: string) => void;
+    removeTool: (id: string) => void;
 }
 
 export const useEditorStore = create<EditorState>()(
     subscribeWithSelector((set) => ({
         activeCategory: "HOME",
         selectedObjectId: null,
+        selectedToolId: null,
 
         viewMode: "SINGLE",
         gridEnabled: true,
@@ -82,6 +95,7 @@ export const useEditorStore = create<EditorState>()(
         importedFile: null,
 
         objects: {},
+        tools: {},
 
         transformMode: "TRANSLATE",
 
@@ -167,6 +181,54 @@ export const useEditorStore = create<EditorState>()(
                             material: { ...material }
                         }
                     }
+                }
+            }),
+
+        addTool: (tool) => 
+            set((state) => ({
+                tools: {
+                    ...state.tools,
+                    [tool.id]: tool,
+                },
+                selectedToolId: tool.id
+            })),
+
+        updateTool: (id, updater) =>
+            set((state) => {
+                const tool = state.tools[id];
+                if (!tool) return state;
+
+                return {
+                tools: {
+                    ...state.tools,
+                    [id]: updater(tool),
+                },
+                };
+            }),
+
+
+        toggleTool: (id) =>
+            set((state) => {
+                const tool = state.tools[id];
+                if (!tool) return state;
+
+                return {
+                    tools: {
+                        ...state.tools,
+                        [id]: {
+                            ...tool,
+                            enabled: !tool.enabled,
+                        }
+                    }
+                }
+            }),
+
+        removeTool: (id) =>
+            set((state) => {
+                const { [id]: _, ...rest } = state.tools;
+                return {
+                    tools: rest,
+                    selectedToolId: null
                 }
             })
     }))
