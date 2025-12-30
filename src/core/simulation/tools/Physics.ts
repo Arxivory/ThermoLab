@@ -7,7 +7,6 @@ export type PhysicsToolType =
     | "RADIATION"
     | "ANGULAR_VELOCITY"
     | "LINEAR_VELOCITY"
-    | "FORCE"
     | "INLET_VELOCITY"
     | "OUTLET"
     | "PRESSURE"
