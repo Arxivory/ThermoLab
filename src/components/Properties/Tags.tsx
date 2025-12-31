@@ -2,29 +2,6 @@ import { ChevronRight, X } from "lucide-react"
 import { useEditorStore } from "../../store/editorStore";
 
 const Tags = () => {
-    const tagsData = [
-        {
-            id: "fixed-temperature",
-            name: "Fixed Temperature"
-        },
-        {
-            id: "heat-flux",
-            name: "Heat Flux"
-        },
-        {
-            id: "insulation",
-            name: "Insulation"
-        },
-        {
-            id: "angular-velocity",
-            name: "Fixed Temperature"
-        },
-        {
-            id: "linear-velocity",
-            name: "Linear Velocity"
-        },
-    ]
-
     
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
     const tools = useEditorStore(s => s.tools);
