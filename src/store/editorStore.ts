@@ -199,10 +199,10 @@ export const useEditorStore = create<EditorState>()(
                 if (!tool) return state;
 
                 return {
-                tools: {
-                    ...state.tools,
-                    [id]: updater(tool),
-                },
+                    tools: {
+                        ...state.tools,
+                        [id]: updater(tool),
+                    }
                 };
             }),
 
