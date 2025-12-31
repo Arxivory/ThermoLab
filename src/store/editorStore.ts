@@ -20,7 +20,7 @@ export type TransformMode =
     | "ROTATE"
     | "SCALE"
 
-interface EditorState {
+export interface EditorState {
     activeCategory: "HOME" | "TOOLS"
     selectedObjectId: string | null;
     selectedToolId: string | null;
