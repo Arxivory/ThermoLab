@@ -132,7 +132,7 @@ export function applyAngularVelocity(
             omega: {
                 x: 0,
                 y: 0,
-                z: 0
+                z: -3
             },
             space: "LOCAL"
         }
