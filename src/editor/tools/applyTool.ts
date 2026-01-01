@@ -45,5 +45,11 @@ export function applyToolToObject(type: PhysicsToolType) {
         case "LINEAR_VELOCITY":
             tool = FACTORIES.applyLinearVelocity(objectId);
             break;
+
+        default:
+            console.warn(`Tool ${type} is not applicable.`);
+            return;
     }
+
+    state.addTool(tool);
 }

@@ -1,18 +1,29 @@
-import { AlarmSmoke, BrickWallFire, ChartLine, ChartNoAxesGantt, Database, FileText, Flame, MoveRight, Radiation, RefreshCcw, Rotate3D, Thermometer, ThermometerSun, TrendingUpDown, Waves, Wind, WindArrowDown } from "lucide-react"
+import { AlarmSmoke, BrickWallFire, ChartLine, ChartNoAxesGantt, 
+    Database, FileText, Flame, MoveRight, Radiation, RefreshCcw, 
+    Rotate3D, Thermometer, ThermometerSun, TrendingUpDown, Waves, 
+    Wind, WindArrowDown } from "lucide-react"
+import { applyToolToObject } from "../../../editor/tools/applyTool";
 
 const Tools = () => {
+
+    const handleClick = (item) => {
+        if (!item.action) return;
+
+        applyToolToObject(item.action);
+    }
+
     const toolsData = [
         {
             key: "heat",
             label: "Heat",
             layout: "grid",
             items: [
-                { icon: Thermometer, title: "Temperature"},
-                { icon: Flame, title: "Heat Flux" },
-                { icon: BrickWallFire, title: "Internal Heat" },
-                { icon: AlarmSmoke, title: "Insulation" },
-                { icon: RefreshCcw, title: "Convection" },
-                { icon: Radiation, title: "Radiation" }
+                { icon: Thermometer, title: "Temperature", action: "TEMPERATURE" },
+                { icon: Flame, title: "Heat Flux", action: "HEAT_FLUX" },
+                { icon: BrickWallFire, title: "Internal Heat", action: "INTERNAL_HEAT" },
+                { icon: AlarmSmoke, title: "Insulation", action: "INSULATION" },
+                { icon: RefreshCcw, title: "Convection", action: "CONVECTION" },
+                { icon: Radiation, title: "Radiation", action: "RADIATION" }
             ]
         },
         {
@@ -29,8 +40,8 @@ const Tools = () => {
             label: "Kinematics",
             layout: "row",
             items: [
-                { icon: Rotate3D, title: "Angular"},
-                { icon: MoveRight, title: "Linear" },
+                { icon: Rotate3D, title: "Angular", action: "ANGULAR_VELOCITY"},
+                { icon: MoveRight, title: "Linear", action: "LINEAR_VELOCITY" },
                 { icon: TrendingUpDown, title: "Force" }
             ]
         },
@@ -64,7 +75,10 @@ const Tools = () => {
 
                     <ul className={`toolbar-icons ${section.layout}`}>
                         {section.items.map((tool, i) => (
-                            <li className={`toolbar-item ${section.layout}`} key={i}>
+                            <li className={`toolbar-item ${section.layout}`} 
+                                key={i}
+                                onClick={() => handleClick(tool)}
+                            >
                                 <tool.icon className={`tool-icon ${section.layout}`}/>
                                 <span className={`tool-title ${section.layout}`}>{tool.title}</span>
                             </li>
