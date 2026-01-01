@@ -503,3 +503,16 @@
   height: 95vh;
   z-index: 11;
 }
+
+.switch-panel.horizontal {
+  top: calc(100% - 3.5rem);
+  left: 46%;
+  display: flex;
+  flex-direction: row;
+}
+
+.switch-panel-vertical-separator {
+  height: 2.15rem;
+  width: 1px;
+  background: #e6e6e6;
+}
