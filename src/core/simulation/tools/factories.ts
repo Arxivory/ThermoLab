@@ -160,3 +160,59 @@ export function applyLinearVelocity(
         }
     }
 }
+
+export function applyInletVelocity(
+    domainId: string,
+    fluidType: "AIR" | "WATER"
+): InletVelocityTool {
+    return {
+        id: uuid(),
+        type: "INLET_VELOCITY",
+        target: {
+            kind: "DOMAIN",
+            id: domainId
+        },
+        enabled: true,
+        parameters: {
+            velocity: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            fluidType: fluidType,
+            turbulenceLevel: 0
+        }
+    }
+}
+
+export function applyOutlet(
+    domainId: string
+): OutletTool {
+    return {
+        id: uuid(),
+        type: "OUTLET",
+        target: {
+            kind: "DOMAIN",
+            id: domainId
+        },
+        enabled: true,
+        parameters: {}
+    }
+}
+
+export function applyPressure(
+    domainId: string
+): PressureTool {
+    return {
+        id: uuid(),
+        type: "PRESSURE",
+        target: {
+            kind: "DOMAIN",
+            id: domainId
+        },
+        enabled: true,
+        parameters: {
+            pressure: 0
+        }
+    }
+}
