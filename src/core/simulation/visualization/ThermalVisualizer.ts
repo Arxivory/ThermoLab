@@ -12,13 +12,31 @@ export class ThermalVisualizer {
             const grid = thermal.grids.get(obj.id);
             if (!grid) continue;
 
-            this.applyToMesh(obj.mesh, grid);
+            const { min, max } = this.computeRange(grid.temperature);
+
+            this.applyToMesh(obj.mesh, grid, min, max);
         }
     }
 
+    private static computeRange(arr: Float32Array) {
+        let min = 280;
+        let max = 320;
+
+        for (let i = 0; i < arr.length; i++) {
+            const v = arr[i];
+            if (v < min) min = v;
+            if (v > max) max = v;
+        }
+
+        return { min, max };
+    }
+
+
     private static applyToMesh(
         mesh: THREE.Object3D,
-        grid: any
+        grid: any,
+        Tmin: number,
+        Tmax: number
     ) {
         mesh.traverse((child) => {
             if (!(child instanceof THREE.Mesh)) return;
@@ -40,7 +58,8 @@ export class ThermalVisualizer {
                 const z = pos.getZ(i);
 
                 const T = this.sampleGrid(grid, x, y, z, bbox);
-                const c = temperatureColor(T);
+                const Tnorm = (T - Tmin) / (Tmax - Tmin + 1e-6);
+                const c = temperatureColor(THREE.MathUtils.clamp(Tnorm, 0, 1));
 
                 colors.setXYZ(i, c.r, c.g, c.b);
             }
@@ -74,6 +93,6 @@ export class ThermalVisualizer {
         const idx = i + nx * (j + ny * k);
         const T = temperature[idx];
 
-        return THREE.MathUtils.clamp((T - 273) / 200, 0, 1);
+        return T;
     }
 }
