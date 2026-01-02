@@ -23,7 +23,7 @@ export function applyTemperature(
         },
         enabled: true,
         parameters: {
-            temperature: 300,
+            temperature: 700,
             applyTo: "SURFACE"
         }
     };
