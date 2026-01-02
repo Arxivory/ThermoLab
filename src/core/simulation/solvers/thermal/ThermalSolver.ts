@@ -2,23 +2,24 @@ import type { CompiledSimulation } from "../../types/CompiledSimulation";
 import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
 
+export interface ThermalState {
+    grids: Map<string, HeatGrid>;
+}
+
 export class ThermalSolver {
     private grids = new Map<string, HeatGrid>();
-    private simulation;
 
-    constructor(sim: CompiledSimulation) {
-        this.simulation = sim;
-        this.initializeGrids();
-    }
+    static initialize(simulation: CompiledSimulation): ThermalState {
+        const grids = new Map<string, HeatGrid>();
 
-    private initializeGrids() {
-        for (const obj of this.simulation.objects) {
-            const grid = this.createGridForObject(obj.id);
-            this.grids.set(obj.id, grid);
+        for (const obj of simulation.objects) {
+            grids.set(obj.id, this.createGrid(obj.id));
         }
+
+        return { grids };
     }
 
-    private createGridForObject(objectId: string): HeatGrid {
+    private static createGrid(objectId: string): HeatGrid {
         const nx = 20, ny = 20, nz = 20;
         const size = nx * ny * nz;
 
@@ -30,16 +31,20 @@ export class ThermalSolver {
         };
     }
 
-    step(dt: number) {
-        for (const obj of this.simulation.objects) {
-            const grid = this.grids.get(obj.id)!;
+    static apply(
+        simulation: CompiledSimulation,
+        state: ThermalState,
+        dt: number
+    ) {
+        for (const obj of simulation.objects) {
+            const grid = state.grids.get(obj.id)!;
             this.solveDiffusion(obj, grid, dt);
-            applyBoundaryConditions(obj.id, grid, this.simulation);
+            applyBoundaryConditions(obj.id, grid, simulation);
             this.swap(grid);
         }
     }
 
-    private solveDiffusion(obj: any, grid: HeatGrid, dt: number) {
+    private static solveDiffusion(obj: any, grid: HeatGrid, dt: number) {
         const { nx, ny, nz, temperature, nextTemperature } = grid;
         const { thermalConductivity, density, specificHeat } = obj.material;
         
@@ -69,7 +74,7 @@ export class ThermalSolver {
         }
     }
 
-    private swap(grid: HeatGrid) {
+    private static swap(grid: HeatGrid) {
         const temp = grid.temperature;
         grid.temperature = grid.nextTemperature;
         grid.nextTemperature = temp;
