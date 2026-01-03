@@ -7,7 +7,6 @@ export interface ThermalState {
 }
 
 export class ThermalSolver {
-    private grids = new Map<string, HeatGrid>();
 
     static initialize(simulation: CompiledSimulation): ThermalState {
         const grids = new Map<string, HeatGrid>();
