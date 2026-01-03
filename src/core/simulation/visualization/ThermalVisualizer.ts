@@ -19,7 +19,7 @@ export class ThermalVisualizer {
     }
 
     private static computeRange(arr: Float32Array) {
-        let min = 280;
+        let min = 287;
         let max = 320;
 
         for (let i = 0; i < arr.length; i++) {
