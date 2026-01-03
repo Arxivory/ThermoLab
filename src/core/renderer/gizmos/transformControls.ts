@@ -54,7 +54,6 @@ export function initTransformControls() {
     useEditorStore.subscribe(
         (state) => state.transformMode,
         (mode) => {
-            console.log(mode);
             if (!transformControls) return;
             if (mode === "TRANSLATE") transformControls.setMode("translate");
             if (mode === "ROTATE") transformControls.setMode("rotate");

@@ -12,7 +12,6 @@ export class SimulationManager {
         this.runtime = new SimulationRuntime(compiled);
         this.running = true;
         this.lastTime = performance.now();
-        console.log('simulation running...');
         this.loop();
     }
 
