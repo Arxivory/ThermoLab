@@ -29,6 +29,7 @@ const ParameterInput = ({ name, value, onChange }: {
         ]
 
         const enumOptions = options.filter(opt => opt === value || name.toUpperCase().includes(opt));
+        console.log(enumOptions);
 
         return enumOptions.length ? (
             <select 
@@ -74,6 +75,7 @@ const Tags = () => {
     
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
     const tools = useEditorStore(s => s.tools);
+    const updateTool = useEditorStore((s) => s.updateTool);
 
     const objectTools = Object.values(tools).filter(
         t => t.target.kind === "OBJECT" && t.target.id === selectedObjectId
@@ -103,15 +105,14 @@ const Tags = () => {
                     {paramsVisible && (
                         <div className="params-container">
                             {Object.entries(tool.parameters).map(([key, value]) => (
-                            <div key={key} className="param-field">
-                                <span className="property-name">{key}: </span>
-                                <ParameterInput
-                                name={key}
-                                value={value}
-                                onChange={(newVal) => {
-                                }}
-                                />
-                            </div>
+                                <div key={key} className="property">
+                                    <span className="property-name">{key}: </span>
+                                    <ParameterInput
+                                        name={key}
+                                        value={value}
+                                        onChange={(newVal) => {}}
+                                    />
+                                </div>
                             ))}
                         </div>
                     )}
