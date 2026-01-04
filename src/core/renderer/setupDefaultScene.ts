@@ -1,6 +1,8 @@
 import * as THREE from "three"
 import { getScene } from "./sceneAccess"
 
+let grid: THREE.GridHelper;
+
 export function setupDefaultScene() {
   const scene = getScene()
 
@@ -11,7 +13,13 @@ export function setupDefaultScene() {
 
   scene.add(light, ambient)
 
-  const grid = new THREE.GridHelper(20, 20, 0x444444, 0x222222)
+  grid = new THREE.GridHelper(20, 20, 0x444444, 0x222222)
   grid.name = "grid"
   scene.add(grid)
+}
+
+export function toggleGrid(visible: boolean) {
+  if (!grid) return;
+
+  grid.visible = visible;
 }

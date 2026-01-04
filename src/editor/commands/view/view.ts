@@ -1,3 +1,4 @@
+import { toggleGridVisibility } from "../../../core/sceneController";
 import { useEditorStore } from "../../../store/editorStore";
 
 export function setSingleView() {
@@ -22,4 +23,5 @@ export function setOrthographic() {
 
 export function toggleGrid() {
     useEditorStore.getState().toggleGrid();
+    toggleGridVisibility(useEditorStore.getState().gridEnabled);
 }
