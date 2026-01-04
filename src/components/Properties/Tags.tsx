@@ -2,6 +2,74 @@ import { ChevronRight, X } from "lucide-react"
 import { useEditorStore } from "../../store/editorStore";
 import { useState } from "react";
 
+const ParameterInput = ({ name, value, onChange }: {
+    name: string;
+    value: any;
+    onChange: (val: any) => void;
+}) => {
+    if (typeof value === "number") {
+        return (
+            <input type="number" 
+                value={value}
+                className="property-input" 
+            />
+        )
+    }
+
+    if (typeof value === "string") {
+        const options = [
+            "LOCAL",
+            "WORLD",
+            "SURFACE",
+            "VOLUME",
+            "IN",
+            "OUT",
+            "UNIFORM",
+            "RADIAL"
+        ]
+
+        const enumOptions = options.filter(opt => opt === value || name.toUpperCase().includes(opt));
+
+        return enumOptions.length ? (
+            <select 
+                value={value} 
+                onChange={(e) => onChange(e.target.value)}
+                className="property-input"
+            >
+                {enumOptions.map(opt => (
+                    <option key={opt} 
+                        value={opt} 
+                        className="property-input-option"
+                    ></option>
+                ))}
+            </select>
+        ) : (
+            <input type="text" 
+                value={value} 
+                onChange={(e) => onChange(e.target.value)} 
+                className="property-input" 
+            />
+        )
+    }
+
+    if (typeof value === "object") {
+        return (
+            <div className="param-object">
+                {Object.entries(value).map(([k, v]) => (
+                <div key={k} className="property-input">
+                    <span className="property-name">{k}: </span>
+                    <ParameterInput
+                    name={k}
+                    value={v}
+                    onChange={(newVal) => onChange({ ...value, [k]: newVal })}
+                    />
+                </div>
+                ))}
+            </div>
+        );
+    }
+}
+
 const Tags = () => {
     
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
@@ -24,6 +92,7 @@ const Tags = () => {
                         <div className="tag-wrapper">
                             <ChevronRight
                                 className="tag-icon"
+                                onClick={() => setParamsVisible(!paramsVisible)}
                             />
                             <span className="tag-name">
                                 {tool.type}
@@ -31,13 +100,21 @@ const Tags = () => {
                         </div>
                         <X className="tag-icon"/>
                     </div>
-                    {paramsVisible && Object.entries(tool.parameters).map(([key, value]) => (
-                        <div className="params-container" key={key}> 
-                            <span className="property-name">
-                                {`${key}: `}
-                            </span>
+                    {paramsVisible && (
+                        <div className="params-container">
+                            {Object.entries(tool.parameters).map(([key, value]) => (
+                            <div key={key} className="param-field">
+                                <span className="property-name">{key}: </span>
+                                <ParameterInput
+                                name={key}
+                                value={value}
+                                onChange={(newVal) => {
+                                }}
+                                />
+                            </div>
+                            ))}
                         </div>
-                    ))}
+                    )}
                 </div>
             ))}
         </div>
