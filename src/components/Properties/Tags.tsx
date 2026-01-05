@@ -1,6 +1,7 @@
 import { ChevronRight, X } from "lucide-react"
 import { useEditorStore } from "../../store/editorStore";
 import { useState } from "react";
+import { updateToolParameters } from "../../editor/tools/updateToolParameter";
 
 const ParameterInput = ({ name, value, onChange }: {
     name: string;
@@ -110,7 +111,14 @@ const Tags = () => {
                                     <ParameterInput
                                         name={key}
                                         value={value}
-                                        onChange={(newVal) => {}}
+                                        onChange={(newVal) => {
+                                            updateTool(tool.id, (prev) =>
+                                                updateToolParameters(prev, (params) => ({
+                                                    ...params,
+                                                    [key]: newVal
+                                                }))
+                                            )
+                                        }}
                                     />
                                 </div>
                             ))}
