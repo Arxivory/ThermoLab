@@ -76,7 +76,7 @@ const ParameterInput = ({ name, value, onChange }: {
 const Tags = () => {
     
     const selectedObjectId = useEditorStore((s) => s.selectedObjectId);
-    const tools = useEditorStore(s => s.tools);
+    const tools = useEditorStore((s) => s.tools);
     const updateTool = useEditorStore((s) => s.updateTool);
 
     const objectTools = Object.values(tools).filter(
