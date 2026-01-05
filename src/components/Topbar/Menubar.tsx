@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEditorStore } from "../../store/editorStore";
 
 interface Props {
     setToolMode: (mode: string) => void;
@@ -11,6 +12,8 @@ const Menubar = ({setToolMode}: Props) => {
         setActivity(!isActive);
     }
 
+    const setStateToolMode = useEditorStore((s) => s.setActiveCategory);
+
     return (
         <menu className="menu-bar">
             <nav className="menu-item">
@@ -19,14 +22,14 @@ const Menubar = ({setToolMode}: Props) => {
             <nav className={`menu-item ${isActive && 'active'}`}
             onClick={() => {
                     toggleActivity()
-                    setToolMode("Home")
+                    setStateToolMode("HOME")
                 }}>
                 Home
             </nav>
             <nav className={`menu-item ${!isActive && 'active'}`}
             onClick={() => {
                     toggleActivity()
-                    setToolMode("Tools")
+                    setStateToolMode("TOOLS")
                 }}>
                 Tools
             </nav>

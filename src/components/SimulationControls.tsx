@@ -3,7 +3,7 @@ import { useEditorStore } from "../store/editorStore";
 import { SimulationManager } from "../core/simulation/SimulationManager";
 
 const SimulationControls = () => {
-  const editorState = useEditorStore.getState();
+  const editorState = useEditorStore((s) => s);
   const simulationManager = new SimulationManager();
 
   const play = () => {
