@@ -13,6 +13,7 @@ const ParameterInput = ({ name, value, onChange }: {
             <input type="number" 
                 value={value}
                 className="property-input" 
+                onChange={(e) => onChange(Number(e.target.value))}
             />
         )
     }
@@ -30,7 +31,6 @@ const ParameterInput = ({ name, value, onChange }: {
         ]
 
         const enumOptions = options.filter(opt => opt === value || name.toUpperCase().includes(opt));
-        console.log(enumOptions);
 
         return enumOptions.length ? (
             <select 
@@ -42,6 +42,7 @@ const ParameterInput = ({ name, value, onChange }: {
                     <option key={opt} 
                         value={opt} 
                         className="property-input-option"
+                        onChange={(e) => e.t}
                     ></option>
                 ))}
             </select>
