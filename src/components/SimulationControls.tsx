@@ -1,10 +1,12 @@
 import { Play, Pause, Square } from "lucide-react";
 import { useEditorStore } from "../store/editorStore";
 import { SimulationManager } from "../core/simulation/SimulationManager";
+import { useRef } from "react";
 
 const SimulationControls = () => {
   const editorState = useEditorStore((s) => s);
-  const simulationManager = new SimulationManager();
+  const simulationManagerRef = useRef(new SimulationManager());
+  const simulationManager = simulationManagerRef.current;
 
   const play = () => {
     simulationManager.start(editorState);
