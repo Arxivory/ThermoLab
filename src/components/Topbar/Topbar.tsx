@@ -1,13 +1,9 @@
 import Toolbar from "./Toolbar"
 
-interface Props {
-  mode: string;
-}
-
-const Topbar = ({mode}: Props) => {
+const Topbar = () => {
   return (
     <div className="topbar panel">
-      <Toolbar toolMode={mode}/>
+      <Toolbar />
     </div>
   )
 }

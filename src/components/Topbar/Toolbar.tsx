@@ -2,11 +2,7 @@ import { useEditorStore } from "../../store/editorStore";
 import Home from "./Categories/Home"
 import Tools from "./Categories/Tools"
 
-interface Props {
-  toolMode: string;
-}
-
-const Toolbar = ({toolMode}: Props) => {
+const Toolbar = () => {
   const stateToolMode = useEditorStore((s) => s.activeCategory);
 
   return (

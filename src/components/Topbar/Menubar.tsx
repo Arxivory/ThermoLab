@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { useEditorStore } from "../../store/editorStore";
 
-interface Props {
-    setToolMode: (mode: string) => void;
-}
 
-const Menubar = ({setToolMode}: Props) => {
+const Menubar = () => {
     const [isActive, setActivity] = useState(true);
 
     const toggleActivity = () => {
