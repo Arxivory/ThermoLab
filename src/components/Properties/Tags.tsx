@@ -1,6 +1,6 @@
 import { ChevronRight, X } from "lucide-react"
 import { useEditorStore } from "../../store/editorStore";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { updateToolParameters } from "../../editor/tools/updateToolParameter";
 
 const ParameterInput = ({ name, value, onChange }: {
@@ -82,8 +82,6 @@ const Tags = () => {
     const objectTools = Object.values(tools).filter(
         t => t.target.kind === "OBJECT" && t.target.id === selectedObjectId
     );
-
-    const [paramsVisible, setParamsVisible] = useState(false);
 
     const [toolId, setToolId] = useState<string | null>(null);
 
