@@ -59,7 +59,7 @@ const ParameterInput = ({ name, value, onChange }: {
         return (
             <div className="param-object">
                 {Object.entries(value).map(([k, v]) => (
-                <div key={k} className="property-input">
+                <div key={k} className="property-multi-input">
                     <span className="property-name">{k}: </span>
                     <ParameterInput
                     name={k}
