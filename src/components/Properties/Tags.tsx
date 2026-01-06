@@ -1,6 +1,6 @@
 import { ChevronRight, X } from "lucide-react"
 import { useEditorStore } from "../../store/editorStore";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { updateToolParameters } from "../../editor/tools/updateToolParameter";
 
 const ParameterInput = ({ name, value, onChange }: {
@@ -85,6 +85,8 @@ const Tags = () => {
 
     const [paramsVisible, setParamsVisible] = useState(false);
 
+    const [toolId, setToolId] = useState<string | null>(null);
+
   return (
     <div className="subpanel">
         <span className="subpanel-title">Tags</span>
@@ -96,7 +98,7 @@ const Tags = () => {
                         <div className="tag-wrapper">
                             <ChevronRight
                                 className="tag-icon"
-                                onClick={() => setParamsVisible(!paramsVisible)}
+                                onClick={() => setToolId(toolId === tool.id ? null : tool.id)}
                             />
                             <span className="tag-name">
                                 {tool.type}
@@ -104,7 +106,7 @@ const Tags = () => {
                         </div>
                         <X className="tag-icon"/>
                     </div>
-                    {paramsVisible && (
+                    {toolId === tool.id && (
                         <div className="params-container">
                             {Object.entries(tool.parameters).map(([key, value]) => (
                                 <div key={key} className="property">
