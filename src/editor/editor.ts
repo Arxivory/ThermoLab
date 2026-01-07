@@ -56,7 +56,7 @@ const editorCommandMap: Record<EditorAction, EditorCommand> = {
     VIEW_SPLIT: () => setSplitView(),
     VIEW_AXIS: () => setAxis(),
     VIEW_PERSPECTIVE: () => setPerspective(),
-    VIEW_ORTHOGRAPHIC: () => setOrthographic,
+    VIEW_ORTHOGRAPHIC: () => setOrthographic(),
     TOGGLE_GRID: () => toggleGrid(),
 
     UNITS_SYSTEM: () => setUnitsSystem(),

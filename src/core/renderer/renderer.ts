@@ -12,12 +12,14 @@ let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
 let renderer: THREE.WebGLRenderer
 let controls: OrbitControls
+let width: number
+let height: number
 
 let animationId: number | null = null
 
 export function initRenderer(canvas: HTMLCanvasElement) {
-  const width = canvas.clientWidth
-  const height = canvas.clientHeight
+  width = canvas.clientWidth
+  height = canvas.clientHeight
 
   scene = new THREE.Scene()
 
