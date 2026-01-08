@@ -2,12 +2,14 @@ import * as THREE from "three";
 import { v4 as uuid } from "uuid";
 import { useEditorStore } from "../../../store/editorStore";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js"
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js"
 import { addObjectToScene } from "../../../core/sceneController";
 import { getEnvironmentMap } from "../../../core/renderer/environmentManager";
 import { getRenderer } from "../../../core/renderer/sceneAccess";
 import { toHexColor } from "../../../utils/colorDataConverters";
 
 const loader = new OBJLoader();
+const stlLoader = new STLLoader();
 
 function createPrimitiveAppearance(envMap: THREE.Texture) {
     return new THREE.MeshPhysicalMaterial({
@@ -60,20 +62,37 @@ function handleMesh(mesh: THREE.Mesh, envMap: THREE.Texture) {
 export async function importObject(file: File) {
     const reader = new FileReader();
 
-    reader.onload = async () => {
-        const object = loader.parse(reader.result as string);
+    const parts = file.name.split('.');
+    const extension = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
 
-        object.name = file.name;
+    reader.onload = async () => {
 
         const envMap = await getEnvironmentMap(getRenderer());
 
         const meshes: THREE.Mesh[] = [];
 
-        object.traverse((child: THREE.Object3D) => {
-            if (child instanceof THREE.Mesh) {
-                meshes.push(child);
-            }
-        });
+        if (extension === 'obj') {
+            const object = loader.parse(reader.result as string);
+            object.name = file.name;
+
+            object.traverse((child: THREE.Object3D) => {
+                if (child instanceof THREE.Mesh) {
+                    meshes.push(child);
+                }
+            });
+        } else if (extension === 'stl') {
+            const geometry = stlLoader.parse(reader.result as ArrayBuffer);
+
+            geometry.computeVertexNormals();
+
+            const material = createPrimitiveAppearance(envMap);
+            const mesh = new THREE.Mesh(geometry, material);
+
+            mesh.name = file.name;
+
+            meshes.push(mesh);
+        }
+
 
         for (const mesh of meshes) {
             handleMesh(mesh, envMap);
@@ -81,5 +100,8 @@ export async function importObject(file: File) {
 
     };
 
-    reader.readAsText(file);
+    if (extension === 'obj')
+        reader.readAsText(file);
+    else
+        reader.readAsArrayBuffer(file);
 }
