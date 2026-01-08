@@ -84,7 +84,7 @@ const Home = () => {
         <div className="toolbar-container">
             <input
                 type="file"
-                accept=".obj"
+                accept=".obj, .stl"
                 ref={fileInputRef}
                 style={{ display: "none" }}
                 onChange={handleFileChange}
