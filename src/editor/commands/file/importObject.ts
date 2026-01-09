@@ -8,7 +8,7 @@ import { getEnvironmentMap } from "../../../core/renderer/environmentManager";
 import { getRenderer } from "../../../core/renderer/sceneAccess";
 import { toHexColor } from "../../../utils/colorDataConverters";
 
-const loader = new OBJLoader();
+const objLoader = new OBJLoader();
 const stlLoader = new STLLoader();
 
 function createPrimitiveAppearance(envMap: THREE.Texture) {
@@ -72,7 +72,7 @@ export async function importObject(file: File) {
         const meshes: THREE.Mesh[] = [];
 
         if (extension === 'obj') {
-            const object = loader.parse(reader.result as string);
+            const object = objLoader.parse(reader.result as string);
             object.name = file.name;
 
             object.traverse((child: THREE.Object3D) => {
