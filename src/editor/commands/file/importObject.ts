@@ -87,6 +87,7 @@ export async function importObject(file: File) {
 
             const material = createPrimitiveAppearance(envMap);
             const mesh = new THREE.Mesh(geometry, material);
+            mesh.rotation.x = -Math.PI / 2;
 
             mesh.name = file.name;
 
