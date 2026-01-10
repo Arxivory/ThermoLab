@@ -26,7 +26,8 @@ export class ThermalSolver {
             nx, ny, nz,
             dx: 1, dy: 1, dz: 1,
             temperature: new Float32Array(size).fill(293),
-            nextTemperature: new Float32Array(size).fill(293)
+            nextTemperature: new Float32Array(size).fill(293),
+            objectId: objectId
         };
     }
 

@@ -9,4 +9,6 @@ export interface HeatGrid {
 
     temperature: Float32Array;
     nextTemperature: Float32Array;
+
+    objectId: string;
 }
