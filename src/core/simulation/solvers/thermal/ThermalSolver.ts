@@ -42,9 +42,13 @@ export class ThermalSolver {
             const grid = state.grids.get(obj.id)!;
             this.solveDiffusion(obj, grid, dt);
             applyBoundaryConditions(obj.id, grid, simulation);
+        }
+
+        ThermalCoupling.apply(simulation, state.grids, dt);
+
+        for (const grid of state.grids.values()) {
             this.swap(grid);
         }
-        ThermalCoupling.apply(simulation, state.grids, dt);
     }
 
     private static solveDiffusion(obj: any, grid: HeatGrid, dt: number) {

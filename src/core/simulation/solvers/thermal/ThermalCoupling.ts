@@ -3,7 +3,7 @@ import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
 const CONTACT_DISTANCE = 1.5;
-const CONTACT_CONDUCTANCE = 10;
+const CONTACT_CONDUCTANCE = 5;
 
 export class ThermalCoupling {
     static apply(
