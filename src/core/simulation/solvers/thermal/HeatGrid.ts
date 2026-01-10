@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 export interface HeatGrid {
     nx: number;
     ny: number;
@@ -6,6 +8,8 @@ export interface HeatGrid {
     dx: number;
     dy: number;
     dz: number;
+
+    origin: THREE.Vector3;
 
     temperature: Float32Array;
     nextTemperature: Float32Array;

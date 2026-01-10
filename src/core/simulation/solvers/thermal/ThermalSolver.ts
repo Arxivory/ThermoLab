@@ -1,4 +1,4 @@
-import type { CompiledSimulation } from "../../types/CompiledSimulation";
+import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSimulation";
 import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
 
@@ -12,22 +12,23 @@ export class ThermalSolver {
         const grids = new Map<string, HeatGrid>();
 
         for (const obj of simulation.objects) {
-            grids.set(obj.id, this.createGrid(obj.id));
+            grids.set(obj.id, this.createGrid(obj));
         }
 
         return { grids };
     }
 
-    private static createGrid(objectId: string): HeatGrid {
+    private static createGrid(object: CompiledObject): HeatGrid {
         const nx = 20, ny = 20, nz = 20;
         const size = nx * ny * nz;
 
         return {
             nx, ny, nz,
             dx: 1, dy: 1, dz: 1,
+            origin: object.mesh.position,
             temperature: new Float32Array(size).fill(293),
             nextTemperature: new Float32Array(size).fill(293),
-            objectId: objectId
+            objectId: object.id
         };
     }
 
