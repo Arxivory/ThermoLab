@@ -1,6 +1,7 @@
 import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSimulation";
 import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
+import { ThermalCoupling } from "./ThermalCoupling";
 
 export interface ThermalState {
     grids: Map<string, HeatGrid>;
@@ -43,6 +44,7 @@ export class ThermalSolver {
             applyBoundaryConditions(obj.id, grid, simulation);
             this.swap(grid);
         }
+        ThermalCoupling.apply(simulation, state.grids, dt);
     }
 
     private static solveDiffusion(obj: any, grid: HeatGrid, dt: number) {
