@@ -42,33 +42,59 @@ export class ThermalCoupling {
         const matA = objA.material;
         const matB = objB.material;
 
-        const spacing = Math.max(A.dx, A.dy, A.dz);
-        const V = spacing ** 3;
+        const V = A.dx * A.dy * A.dz;
 
         const idx = (i:number,j:number,k:number,nx:number,ny:number)=>
             i + nx*(j + ny*k);
 
+        const gridToWorld = (grid: HeatGrid, i: number, j: number, k: number) => {
+            return new THREE.Vector3(
+                grid.origin.x + (i + 0.5) * grid.dx,
+                grid.origin.y + (j + 0.5) * grid.dy,
+                grid.origin.z + (k + 0.5) * grid.dz
+            )
+        }
+
+        const worldToGrid = (grid: HeatGrid, pos: THREE.Vector3) => {
+            const i = Math.floor((pos.x - grid.origin.x) / grid.dx);
+            const j = Math.floor((pos.y - grid.origin.y) / grid.dy);
+            const k = Math.floor((pos.z - grid.origin.z) / grid.dz);
+            return { i, j, k };
+        }
+
         for (let k = 0; k < A.nz; k++) {
             for (let j = 0; j < A.ny; j++) {
                 for (let i = 0; i < A.nx; i++) {
+                    const isBoundary =
+                        i === 0 || i === A.nx - 1 ||
+                        j === 0 || j === A.ny - 1 ||
+                        k === 0 || k === A.nz - 1
 
-                    if (
-                        i !== 0 && j !== 0 && k !== 0 &&
-                        i !== A.nx-1 && j !== A.ny-1 && k !== A.nz-1
+                    if (!isBoundary) continue;
+
+                    const worldPos = gridToWorld(A, i, j, k);
+
+                    if (!boxB.containsPoint(worldPos)) continue;
+
+                    const { i: iB, j: jB, k: kB} = worldToGrid(B, worldPos);
+
+                    if (iB < 0 || iB >= B.nx ||
+                        jB < 0 || jB >= B.ny ||
+                        kB < 0 || kB >= B.nz
                     ) continue;
 
-                    const idA = idx(i,j,k,A.nx,A.ny);
-                    const idB = idA % B.temperature.length;
+                    const idA = idx(i, j, k, A.nx, A.ny);
+                    const idB = idx(iB, jB, kB, B.nx, B.ny);
 
                     const TA = A.temperature[idA];
                     const TB = B.temperature[idB];
 
-                    const dQ = CONTACT_CONDUCTANCE * (TB - TA);
+                    const dQ = CONTACT_CONDUCTANCE * (TB - TA)
 
-                    A.temperature[idA] +=
+                    A.temperature[idA] += 
                         (dQ * dt) / (matA.density * matA.specificHeat * V);
 
-                    B.temperature[idB] -=
+                    A.temperature[idB] -=
                         (dQ * dt) / (matB.density * matB.specificHeat * V);
                 }
             }
