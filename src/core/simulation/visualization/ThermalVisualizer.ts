@@ -14,8 +14,6 @@ export class ThermalVisualizer {
 
             const { min, max } = this.computeRange(grid.temperature);
 
-            console.log('Min: ', min, 'Max: ', max);
-
             this.applyToMesh(obj.mesh, grid, min, max);
         }
     }

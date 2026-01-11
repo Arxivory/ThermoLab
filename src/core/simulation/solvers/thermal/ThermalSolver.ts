@@ -49,10 +49,7 @@ export class ThermalSolver {
     ) {
         for (const obj of simulation.objects) {
             const grid = state.grids.get(obj.id)!;
-            const avgBefore = grid.temperature.reduce((a,b) => a+b) / grid.temperature.length;
             this.solveDiffusion(obj, grid, dt);
-            const avgAfter = grid.nextTemperature.reduce((a,b) => a+b) / grid.nextTemperature.length;
-            console.log(`Before: ${avgBefore.toFixed(2)}K, After: ${avgAfter.toFixed(2)}K, dt: ${dt.toFixed(4)}`);
         }
 
         ThermalCoupling.apply(simulation, state.grids, dt);
