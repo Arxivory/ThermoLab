@@ -14,13 +14,15 @@ export class ThermalVisualizer {
 
             const { min, max } = this.computeRange(grid.temperature);
 
+            console.log('Min: ', min, 'Max: ', max);
+
             this.applyToMesh(obj.mesh, grid, min, max);
         }
     }
 
     private static computeRange(arr: Float32Array) {
-        let min = 287;
-        let max = 320;
+        let min = Infinity;
+        let max = -Infinity;
 
         for (let i = 0; i < arr.length; i++) {
             const v = arr[i];

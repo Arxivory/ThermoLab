@@ -1,6 +1,7 @@
 import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSimulation";
 import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
+import * as THREE from "three";
 import { ThermalCoupling } from "./ThermalCoupling";
 
 export interface ThermalState {
@@ -23,10 +24,18 @@ export class ThermalSolver {
         const nx = 20, ny = 20, nz = 20;
         const size = nx * ny * nz;
 
+        const bbox = new THREE.Box3().setFromObject(object.mesh);
+        const boxSize = new THREE.Vector3();
+        bbox.getSize(boxSize);
+
+        const dx = boxSize.x / nx;
+        const dy = boxSize.y / ny;
+        const dz = boxSize.z / nz;
+
         return {
             nx, ny, nz,
-            dx: 1, dy: 1, dz: 1,
-            origin: object.mesh.position,
+            dx, dy, dz,
+            origin: bbox.min.clone(),
             temperature: new Float32Array(size).fill(293),
             nextTemperature: new Float32Array(size).fill(293),
             objectId: object.id
@@ -65,14 +74,16 @@ export class ThermalSolver {
                 for (let i = 1; i < nx - 1; i++) {
                     const id = idx(i, j, k);
 
+                    const dx2 = grid.dx * grid.dx;
+
                     const laplacian = 
-                        temperature[idx(i + 1, j, k)] +
+                        (temperature[idx(i + 1, j, k)] +
                         temperature[idx(i - 1, j, k)] +
                         temperature[idx(i, j + 1, k)] +
                         temperature[idx(i, j - 1, k)] +
                         temperature[idx(i, j, k + 1)] +
                         temperature[idx(i, j, k - 1)] -
-                        6 * temperature[id];
+                        6 * temperature[id]) / dx2;
 
                     nextTemperature[id] = 
                         temperature[id] + alpha * laplacian * dt;
