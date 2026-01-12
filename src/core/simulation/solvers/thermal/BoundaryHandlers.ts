@@ -26,5 +26,4 @@ function applyFixedTemperature(grid: HeatGrid, T: number) {
         }
     }
 
-    //temperature.fill(T);
 }
