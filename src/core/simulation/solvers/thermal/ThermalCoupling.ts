@@ -47,19 +47,46 @@ export class ThermalCoupling {
         const idx = (i:number,j:number,k:number,nx:number,ny:number)=>
             i + nx*(j + ny*k);
 
-        const gridToWorld = (grid: HeatGrid, i: number, j: number, k: number) => {
+        const gridToWorld = (
+            grid: HeatGrid,
+            mesh: THREE.Object3D,
+            i: number,
+            j: number,
+            k: number
+        ) => {
+            const bbox = new THREE.Box3().setFromObject(mesh);
+            const size = new THREE.Vector3();
+            bbox.getSize(size);
+
+            const u = (i + 0.5) / grid.nx;
+            const v = (j + 0.5) / grid.ny;
+            const w = (k + 0.5) / grid.nz;
+
             return new THREE.Vector3(
-                grid.origin.x + (i + 0.5) * grid.dx,
-                grid.origin.y + (j + 0.5) * grid.dy,
-                grid.origin.z + (k + 0.5) * grid.dz
-            )
+                bbox.min.x + u * size.x,
+                bbox.min.y + v * size.y,
+                bbox.min.z + w * size.z
+            );
         }
 
-        const worldToGrid = (grid: HeatGrid, pos: THREE.Vector3) => {
-            const i = Math.floor((pos.x - grid.origin.x) / grid.dx);
-            const j = Math.floor((pos.y - grid.origin.y) / grid.dy);
-            const k = Math.floor((pos.z - grid.origin.z) / grid.dz);
-            return { i, j, k };
+        const worldToGrid = (
+            grid: HeatGrid,
+            mesh: THREE.Object3D,
+            pos: THREE.Vector3
+        ) => {
+            const bbox = new THREE.Box3().setFromObject(mesh);
+            const size = new THREE.Vector3;
+            bbox.getSize(size);
+
+            const u = (pos.x - bbox.min.x) / size.x;
+            const v = (pos.y - bbox.min.y) / size.y;
+            const w = (pos.z - bbox.min.z) / size.z;
+
+            const i = Math.floor(u * grid.nx);
+            const j = Math.floor(v * grid.ny);
+            const k = Math.floor(w * grid.nz);
+
+            return { i, j, k }
         }
 
         for (let k = 0; k < A.nz; k++) {
@@ -72,11 +99,11 @@ export class ThermalCoupling {
 
                     if (!isBoundary) continue;
 
-                    const worldPos = gridToWorld(A, i, j, k);
+                    const worldPos = gridToWorld(A, objA.mesh, i, j, k);
 
                     if (!boxB.containsPoint(worldPos)) continue;
 
-                    const { i: iB, j: jB, k: kB} = worldToGrid(B, worldPos);
+                    const { i: iB, j: jB, k: kB } = worldToGrid(B, objB.mesh, worldPos);
 
                     if (iB < 0 || iB >= B.nx ||
                         jB < 0 || jB >= B.ny ||
