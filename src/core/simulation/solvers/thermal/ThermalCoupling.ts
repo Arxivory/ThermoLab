@@ -121,7 +121,7 @@ export class ThermalCoupling {
                     A.temperature[idA] += 
                         (dQ * dt) / (matA.density * matA.specificHeat * V);
 
-                    A.temperature[idB] -=
+                    B.temperature[idB] -=
                         (dQ * dt) / (matB.density * matB.specificHeat * V);
                 }
             }

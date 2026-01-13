@@ -14,8 +14,13 @@ export class ThermalSolver {
         const grids = new Map<string, HeatGrid>();
 
         for (const obj of simulation.objects) {
-            grids.set(obj.id, this.createGrid(obj));
+            const grid = this.createGrid(obj);
+            
+            applyBoundaryConditions(obj.id, grid, simulation);
+            
+            grids.set(obj.id, grid);
         }
+
 
         return { grids };
     }
@@ -51,13 +56,8 @@ export class ThermalSolver {
             const grid = state.grids.get(obj.id)!;
             this.solveDiffusion(obj, grid, dt);
         }
-
+        
         ThermalCoupling.apply(simulation, state.grids, dt);
-
-        for (const obj of simulation.objects) {
-            const grid = state.grids.get(obj.id)!;
-            applyBoundaryConditions(obj.id, grid, simulation);
-        }
 
         for (const grid of state.grids.values()) {
             this.swap(grid);
