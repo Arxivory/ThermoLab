@@ -57,10 +57,15 @@ export class ThermalSolver {
             this.solveDiffusion(obj, grid, dt);
         }
         
-        ThermalCoupling.apply(simulation, state.grids, dt);
-
         for (const grid of state.grids.values()) {
             this.swap(grid);
+        }
+
+        ThermalCoupling.apply(simulation, state.grids, dt);
+
+        for (const obj of simulation.objects) {
+            const grid = state.grids.get(obj.id)!;
+            applyBoundaryConditions(obj.id, grid, simulation);
         }
     }
 

@@ -17,7 +17,7 @@ export function applyBoundaryConditions(
 }
 
 function applyFixedTemperature(grid: HeatGrid, T: number) {
-    const { nx, ny, nz, nextTemperature } = grid;
+    const { nx, ny, nz, temperature } = grid;
 
     for (let i = 0; i < nx; i++) {
         for (let j = 0; j < ny; j++) {
@@ -26,7 +26,7 @@ function applyFixedTemperature(grid: HeatGrid, T: number) {
                     j === 0 || j === ny - 1 ||
                     k === 0 || k === nz - 1) {
                     const id = i + nx * (j + ny * k);
-                    nextTemperature[id] = T;
+                    temperature[id] = T;
                 }
             }
         }
