@@ -1,10 +1,14 @@
-import type { CompiledSimulation } from "../../types/CompiledSimulation";
+import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSimulation";
 import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
 const CONTACT_CONDUCTANCE = 5;
 
 export class ThermalCoupling {
+    private static _tempVec = new THREE.Vector3();
+    private static _invMat = new THREE.Matrix4();
+    private static _boxB = new THREE.Box3();
+
     static apply(
         simulation: CompiledSimulation,
         grids: Map<string, HeatGrid>,
@@ -34,98 +38,79 @@ export class ThermalCoupling {
         const objB = simulation.objects.find(o => o.id === B.objectId);
         if (!objA || !objB) return;
 
-        const boxA = new THREE.Box3().setFromObject(objA.mesh);
-        const boxB = new THREE.Box3().setFromObject(objB.mesh);
+        const worldBoxA = new THREE.Box3().setFromObject(objA.mesh);
+        const worldBoxB = new THREE.Box3().setFromObject(objB.mesh);
+        if (!worldBoxA.intersectsBox(worldBoxB)) return;
 
-        if (!boxA.intersectsBox(boxB)) return;
+        this._invMat.copy(objB.mesh.matrixWorld).invert();
 
-        const matA = objA.material;
-        const matB = objB.material;
-
-        const V = A.dx * A.dy * A.dz;
-
-        const idx = (i:number,j:number,k:number,nx:number,ny:number)=>
-            i + nx*(j + ny*k);
-
-        const gridToWorld = (
-            grid: HeatGrid,
-            mesh: THREE.Object3D,
-            i: number,
-            j: number,
-            k: number
-        ) => {
-            const bbox = new THREE.Box3().setFromObject(mesh);
-            const size = new THREE.Vector3();
-            bbox.getSize(size);
-
-            const u = (i + 0.5) / grid.nx;
-            const v = (j + 0.5) / grid.ny;
-            const w = (k + 0.5) / grid.nz;
-
-            return new THREE.Vector3(
-                bbox.min.x + u * size.x,
-                bbox.min.y + v * size.y,
-                bbox.min.z + w * size.z
-            );
-        }
-
-        const worldToGrid = (
-            grid: HeatGrid,
-            mesh: THREE.Object3D,
-            pos: THREE.Vector3
-        ) => {
-            const bbox = new THREE.Box3().setFromObject(mesh);
-            const size = new THREE.Vector3;
-            bbox.getSize(size);
-
-            const u = (pos.x - bbox.min.x) / size.x;
-            const v = (pos.y - bbox.min.y) / size.y;
-            const w = (pos.z - bbox.min.z) / size.z;
-
-            const i = Math.floor(u * grid.nx);
-            const j = Math.floor(v * grid.ny);
-            const k = Math.floor(w * grid.nz);
-
-            return { i, j, k }
-        }
+        if (!objB.mesh.geometry.boundingBox) objB.mesh.geometry.computeBoundingBox();
+        this._boxB.copy(objB.mesh.geometry.boundingBox!);
+            
+        const V = A.dx * A.dy * A.dz
 
         for (let k = 0; k < A.nz; k++) {
             for (let j = 0; j < A.ny; j++) {
                 for (let i = 0; i < A.nx; i++) {
-                    const isBoundary =
-                        i === 0 || i === A.nx - 1 ||
-                        j === 0 || j === A.ny - 1 ||
-                        k === 0 || k === A.nz - 1
+                    if (i > 0 && i < A.nx - 1 && 
+                        j > 0 && j < A.ny - 1 && 
+                        k > 0 && k < A.nz - 1) continue;
+                    
+                    const worldPosA = this.getVoxelWorldPos(objA, A, i, j, k);
 
-                    if (!isBoundary) continue;
+                    const localPosB = worldPosA.applyMatrix(this._invMat);
 
-                    const worldPos = gridToWorld(A, objA.mesh, i, j, k);
+                    if (this._boxB.containsPoint(localPosB)) {
+                        const coordsB = this.localToGridIndices(localPosB, this._boxB, B);
 
-                    if (!boxB.containsPoint(worldPos)) continue;
+                        const idA = i + A.nx * (j + A.ny * k);
+                        const idB = coordsB.i + B.nx * (coordsB.j + B.ny * coordsB.k);
 
-                    const { i: iB, j: jB, k: kB } = worldToGrid(B, objB.mesh, worldPos);
+                        const TA = A.temperature[idA];
+                        const TB = B.temperature[idB];
 
-                    if (iB < 0 || iB >= B.nx ||
-                        jB < 0 || jB >= B.ny ||
-                        kB < 0 || kB >= B.nz
-                    ) continue;
+                        const dQ = CONTACT_CONDUCTANCE * (TB - TA);
 
-                    const idA = idx(i, j, k, A.nx, A.ny);
-                    const idB = idx(iB, jB, kB, B.nx, B.ny);
-
-                    const TA = A.temperature[idA];
-                    const TB = B.temperature[idB];
-
-                    const dQ = CONTACT_CONDUCTANCE * (TB - TA)
-
-                    A.temperature[idA] += 
-                        (dQ * dt) / (matA.density * matA.specificHeat * V);
-
-                    B.temperature[idB] -=
-                        (dQ * dt) / (matB.density * matB.specificHeat * V);
+                        A.temperature[idA] += (dQ * dt) / (objA.material.density * objA.material.specificHeat * V);
+                        B.temperature[idB] -= (dQ * dt) / (objB.material.density * objB.material.specificHeat * V);
+                    }
+                    
                 }
             }
         }
+    }
+
+    private static getVoxelWorldPos(
+        obj: CompiledObject,
+        grid: HeatGrid,
+        i: number, j: number, k: number
+    ) {
+        const localX = (i + 0.5) * grid.dx;
+        const localY = (j + 0.5) * grid.dy;
+        const localZ = (k + 0.5) * grid.dz;
+
+        return new THREE.Vector3(localX, localY, localZ)
+            .add(grid.origin)
+            .applyMatrix4(obj.mesh.matrixWorld);
+    }
+
+    private static localToGridIndices(
+        localPos: THREE.Vector3,
+        localBox: THREE.Box3,
+        grid: HeatGrid
+    ) {
+        const size = new THREE.Vector3();
+        localBox.getSize(size);
+
+        const u = (localPos.x - localBox.min.x) / size.x;
+        const v = (localPos.y - localBox.min.y) / size.y;
+        const w = (localPos.z - localBox.min.z) / size.z;
+
+        return {
+            i: Math.max(0, Math.min(grid.nx - 1, Math.floor(u * grid.nx))),
+            j: Math.max(0, Math.min(grid.ny - 1, Math.floor(v * grid.ny))),
+            k: Math.max(0, Math.min(grid.nz - 1, Math.floor(w * grid.nz)))
+        };
     }
 
 }
