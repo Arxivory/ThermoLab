@@ -2,6 +2,7 @@ import * as THREE from "three"
 import type { ThermalState } from "../solvers/thermal/ThermalSolver"
 import type { CompiledSimulation } from "../types/CompiledSimulation"
 import { temperatureColor } from "./colormaps"
+import type { HeatGrid } from "../solvers/thermal/HeatGrid"
 
 export class ThermalVisualizer {
     static update(
@@ -74,25 +75,43 @@ export class ThermalVisualizer {
     }
 
     private static sampleGrid(
-        grid: any,
-        x: number,
-        y: number,
-        z: number,
+        grid: HeatGrid,
+        x: number, y: number, z: number,
         bbox: THREE.Box3
     ): number {
         const { nx, ny, nz, temperature } = grid;
 
-        const u = (x - bbox.min.x) / (bbox.max.x - bbox.min.x);
-        const v = (y - bbox.min.y) / (bbox.max.y - bbox.min.y);
-        const w = (z - bbox.min.z) / (bbox.max.z - bbox.min.z);
+        const u = (x - bbox.min.x) / (bbox.max.x - bbox.min.x) * (nx - 1);
+        const v = (y - bbox.min.y) / (bbox.max.y - bbox.min.y) * (ny - 1);
+        const w = (z - bbox.min.z) / (bbox.max.z - bbox.min.z) * (nz - 1);
 
-        const i = Math.min(nx - 1, Math.max(0, Math.floor(u * nx)));
-        const j = Math.min(ny - 1, Math.max(0, Math.floor(v * ny)));
-        const k = Math.min(nz - 1, Math.max(0, Math.floor(w * nz)));
+        const i0 = Math.floor(u), i1 = Math.min(i0 + 1, nx - 1);
+        const j0 = Math.floor(v), j1 = Math.min(j0 + 1, ny - 1);
+        const k0 = Math.floor(w), k1 = Math.min(k0 + 1, nz - 1);
 
-        const idx = i + nx * (j + ny * k);
-        const T = temperature[idx];
+        const tx = u - i0;
+        const ty = v - j0;
+        const tz = w - k0;
 
-        return T;
+        const idx = (i: number, j: number, k: number) => i + nx * (j + ny * k);
+
+        const c000 = temperature[idx(i0, j0, k0)];
+        const c100 = temperature[idx(i1, j0, k0)];
+        const c010 = temperature[idx(i0, j1, k0)];
+        const c110 = temperature[idx(i1, j1, k0)];
+        const c001 = temperature[idx(i0, j0, k1)];
+        const c101 = temperature[idx(i1, j0, k1)];
+        const c011 = temperature[idx(i0, j1, k1)];
+        const c111 = temperature[idx(i1, j1, k1)];
+
+        const c00 = c000 * (1 - tx) + c100 * tx;
+        const c10 = c010 * (1 - tx) + c110 * tx;
+        const c01 = c001 * (1 - tx) + c101 * tx;
+        const c11 = c011 * (1 - tx) + c111 * tx;
+
+        const c0 = c00 * (1 - ty) + c10 * ty;
+        const c1 = c01 * (1 - ty) + c11 * ty;
+
+        return c0 * (1 - tz) + c1 * tz;
     }
 }

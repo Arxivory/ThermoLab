@@ -2,7 +2,7 @@ import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSim
 import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
-const CONTACT_CONDUCTANCE = 5;
+const CONTACT_CONDUCTANCE = 500;
 
 export class ThermalCoupling {
     private static _tempVec = new THREE.Vector3();
@@ -58,7 +58,7 @@ export class ThermalCoupling {
                     
                     const worldPosA = this.getVoxelWorldPos(objA, A, i, j, k);
 
-                    const localPosB = worldPosA.applyMatrix(this._invMat);
+                    const localPosB = worldPosA.applyMatrix4(this._invMat);
 
                     if (this._boxB.containsPoint(localPosB)) {
                         const coordsB = this.localToGridIndices(localPosB, this._boxB, B);
@@ -71,8 +71,8 @@ export class ThermalCoupling {
 
                         const dQ = CONTACT_CONDUCTANCE * (TB - TA);
 
-                        A.temperature[idA] += (dQ * dt) / (objA.material.density * objA.material.specificHeat * V);
-                        B.temperature[idB] -= (dQ * dt) / (objB.material.density * objB.material.specificHeat * V);
+                        A.nextTemperature[idA] += (dQ * dt) / (objA.material.density * objA.material.specificHeat * V);
+                        B.nextTemperature[idB] -= (dQ * dt) / (objB.material.density * objB.material.specificHeat * V);
                     }
                     
                 }
