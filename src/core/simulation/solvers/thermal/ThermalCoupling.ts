@@ -3,6 +3,7 @@ import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
 const CONTACT_CONDUCTANCE = 5000;
+const CONTACT_EPSILON = 0.1;
 
 export class ThermalCoupling {
     private static _tempVec = new THREE.Vector3();
@@ -49,6 +50,8 @@ export class ThermalCoupling {
             
         const V = A.dx * A.dy * A.dz
 
+        const paddedBoxB = this._boxB.clone().expandByScalar(A.dx * CONTACT_EPSILON);
+
         for (let k = 0; k < A.nz; k++) {
             for (let j = 0; j < A.ny; j++) {
                 for (let i = 0; i < A.nx; i++) {
@@ -60,7 +63,7 @@ export class ThermalCoupling {
 
                     const localPosB = worldPosA.applyMatrix4(this._invMat);
 
-                    if (this._boxB.containsPoint(localPosB)) {
+                    if (paddedBoxB.containsPoint(localPosB)) {
                         const coordsB = this.localToGridIndices(localPosB, this._boxB, B);
 
                         const idA = i + A.nx * (j + A.ny * k);
