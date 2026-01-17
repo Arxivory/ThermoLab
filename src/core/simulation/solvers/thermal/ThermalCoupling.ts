@@ -6,7 +6,6 @@ const CONTACT_CONDUCTANCE = 1000;
 const CONTACT_EPSILON = 50;
 
 export class ThermalCoupling {
-    private static _tempVec = new THREE.Vector3();
     private static _invMat = new THREE.Matrix4();
     private static _boxB = new THREE.Box3();
 
