@@ -21,6 +21,10 @@ export class ThermalSolver {
             grids.set(obj.id, grid);
         }
 
+        for (const obj of simulation.objects) {
+            obj.mesh.updateWorldMatrix(true);
+        }
+
 
         return { grids };
     }
@@ -52,6 +56,10 @@ export class ThermalSolver {
         state: ThermalState,
         dt: number
     ) {
+        for (const obj of simulation.objects) {
+            obj.mesh.updateWorldMatrix(true);
+        }
+
         for (const obj of simulation.objects) {
             const grid = state.grids.get(obj.id)!;
             grid.nextTemperature.set(grid.temperature);
