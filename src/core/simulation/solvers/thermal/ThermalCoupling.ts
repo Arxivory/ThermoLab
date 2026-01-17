@@ -2,7 +2,7 @@ import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSim
 import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
-const CONTACT_CONDUCTANCE = 500;
+const CONTACT_CONDUCTANCE = 5000;
 
 export class ThermalCoupling {
     private static _tempVec = new THREE.Vector3();

@@ -54,6 +54,7 @@ export class ThermalSolver {
     ) {
         for (const obj of simulation.objects) {
             const grid = state.grids.get(obj.id)!;
+            grid.nextTemperature.set(grid.temperature);
             this.solveDiffusion(obj, grid, dt);
         }
         

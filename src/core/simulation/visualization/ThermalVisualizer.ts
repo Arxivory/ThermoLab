@@ -47,6 +47,9 @@ export class ThermalVisualizer {
             const pos = geom.attributes.position;
             const count = pos.count;
 
+            const VISUAL_MIN = 293; 
+            const VISUAL_MAX = 400;
+
             let colors = 
                 geom.attributes.color ??
                 new THREE.BufferAttribute(new Float32Array(count * 3), 3);
@@ -59,7 +62,7 @@ export class ThermalVisualizer {
                 const z = pos.getZ(i);
 
                 const T = this.sampleGrid(grid, x, y, z, bbox);
-                const Tnorm = (T - Tmin) / (Tmax - Tmin + 1e-6);
+                const Tnorm = (T - VISUAL_MIN) / (VISUAL_MAX - VISUAL_MIN);
                 const c = temperatureColor(THREE.MathUtils.clamp(Tnorm, 0, 1));
 
                 colors.setXYZ(i, c.r, c.g, c.b);
