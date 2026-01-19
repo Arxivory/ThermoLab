@@ -20,8 +20,8 @@ export class ThermalVisualizer {
     }
 
     private static computeRange(arr: Float32Array) {
-        let min = 250;
-        let max = 450;
+        let min = 293;
+        let max = 400;
 
         for (let i = 0; i < arr.length; i++) {
             const v = arr[i];
@@ -47,9 +47,6 @@ export class ThermalVisualizer {
             const pos = geom.attributes.position;
             const count = pos.count;
 
-            const VISUAL_MIN = 293; 
-            const VISUAL_MAX = 400;
-
             let colors = 
                 geom.attributes.color ??
                 new THREE.BufferAttribute(new Float32Array(count * 3), 3);
@@ -62,7 +59,7 @@ export class ThermalVisualizer {
                 const z = pos.getZ(i);
 
                 const T = this.sampleGrid(grid, x, y, z, bbox);
-                const Tnorm = (T - VISUAL_MIN) / (VISUAL_MAX - VISUAL_MIN);
+                const Tnorm = (T - Tmin) / (Tmax - Tmin + 1e-5);
                 const c = temperatureColor(THREE.MathUtils.clamp(Tnorm, 0, 1));
 
                 colors.setXYZ(i, c.r, c.g, c.b);
