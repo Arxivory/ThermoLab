@@ -43,6 +43,9 @@ export class ThermalVisualizer {
             if (!(child instanceof THREE.Mesh)) return;
             if (!(child.geometry.attributes.position)) return;
 
+            const VISUAL_MAX = 400;
+            const VISUAL_MIN = 293;
+
             const geom = child.geometry as THREE.BufferGeometry;
             const pos = geom.attributes.position;
             const count = pos.count;
@@ -59,7 +62,7 @@ export class ThermalVisualizer {
                 const z = pos.getZ(i);
 
                 const T = this.sampleGrid(grid, x, y, z, bbox);
-                const Tnorm = (T - Tmin) / (Tmax - Tmin + 1e-5);
+                const Tnorm = (T - VISUAL_MIN) / ((VISUAL_MAX - VISUAL_MIN) + 1e-5);
                 const c = temperatureColor(THREE.MathUtils.clamp(Tnorm, 0, 1));
 
                 colors.setXYZ(i, c.r, c.g, c.b);
