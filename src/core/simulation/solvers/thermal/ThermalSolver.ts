@@ -98,13 +98,8 @@ export class ThermalSolver {
                         temperature[idx(i, j, k - 1)] -
                         6 * temperature[id]) / dx2;
 
-                    const maxAllowedDelta = 50;
-                    let deltaT = alpha * laplacian * dt;
-
-                    deltaT = Math.max(-maxAllowedDelta, Math.min(maxAllowedDelta, deltaT));
-
                     nextTemperature[id] = 
-                        temperature[id] + deltaT;
+                        temperature[id] + alpha * laplacian * dt;
                 }
             }
         }

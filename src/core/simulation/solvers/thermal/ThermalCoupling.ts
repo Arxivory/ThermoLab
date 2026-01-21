@@ -2,7 +2,7 @@ import type { CompiledObject, CompiledSimulation } from "../../types/CompiledSim
 import type { HeatGrid } from "./HeatGrid";
 import * as THREE from "three";
 
-const CONTACT_CONDUCTANCE = 100;
+const CONTACT_CONDUCTANCE = 1000;
 const CONTACT_EPSILON = 50;
 
 export class ThermalCoupling {
@@ -47,7 +47,8 @@ export class ThermalCoupling {
         if (!objB.mesh.geometry.boundingBox) objB.mesh.geometry.computeBoundingBox();
         this._boxB.copy(objB.mesh.geometry.boundingBox!);
             
-        const V = A.dx * A.dy * A.dz
+        const VA = A.dx * A.dy * A.dz;
+        const VB = B.dx * B.dy * B.dz;
 
         const paddedBoxB = this._boxB.clone().expandByScalar(A.dx * CONTACT_EPSILON);
 
@@ -73,8 +74,8 @@ export class ThermalCoupling {
 
                         const dQ = CONTACT_CONDUCTANCE * (TB - TA);
 
-                        A.nextTemperature[idA] += (dQ * dt) / (objA.material.density * objA.material.specificHeat * V);
-                        B.nextTemperature[idB] -= (dQ * dt) / (objB.material.density * objB.material.specificHeat * V);
+                        A.nextTemperature[idA] += (dQ * dt) / (objA.material.density * objA.material.specificHeat * VA);
+                        B.nextTemperature[idB] -= (dQ * dt) / (objB.material.density * objB.material.specificHeat * VB);
                     }
                     
                 }
