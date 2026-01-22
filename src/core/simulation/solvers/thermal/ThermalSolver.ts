@@ -63,7 +63,7 @@ export class ThermalSolver {
         for (const obj of simulation.objects) {
             const grid = state.grids.get(obj.id)!;
             grid.nextTemperature.set(grid.temperature);
-            this.solveDiffusion(obj, grid, dt);
+            this.solveImplicitDiffusion(obj, grid, dt);
         }
         
         ThermalCoupling.apply(simulation, state.grids, dt);
@@ -100,6 +100,51 @@ export class ThermalSolver {
 
                     nextTemperature[id] = 
                         temperature[id] + alpha * laplacian * dt;
+                }
+            }
+        }
+    }
+
+    private static solveImplicitDiffusion(obj: any, grid: HeatGrid, dt: number) {
+        const { nx, ny, nz, temperature, nextTemperature } = grid;
+        const { thermalConductivity, density, specificHeat } = obj.material;
+        
+        const alpha = thermalConductivity / (density * specificHeat);
+
+        const safeDx = Math.max(grid.dx, 1e-4);
+        const safeDy = Math.max(grid.dy, 1e-4);
+        const safeDz = Math.max(grid.dz, 1e-4);
+
+        const bx = (alpha * dt) / (safeDx * safeDx);
+        const by = (alpha * dt) / (safeDy * safeDy);
+        const bz = (alpha * dt) / (safeDz * safeDz);
+
+        const idx = (i: number, j: number, k: number) =>
+            i + nx * (j + ny * k);
+
+        const iterations = 20;
+
+        nextTemperature.set(temperature);
+
+        for (let it = 0; it < iterations; it++) {
+            for (let k = 1; k < nz - 1; k++) {
+                for (let j = 1; j < ny - 1; j++) {
+                    for (let i = 1; i < nx - 1; i++) {
+                        const id = idx(i, j, k);
+
+                        const neighbors = 
+                            bx * (nextTemperature[idx(i+1, j, k)] + nextTemperature[idx(i-1, j, k)]) +
+                            by * (nextTemperature[idx(i, j+1, k)] + nextTemperature[idx(i, j-1, k)]) +
+                            bz * (nextTemperature[idx(i, j, k+1)] + nextTemperature[idx(i, j, k-1)]);
+
+                        const val = (temperature[id] + neighbors) / (1 + 2*bx + 2*by + 2*bz);
+
+                        if (isNaN(val)) {
+                            nextTemperature[id] = temperature[id];
+                        } else {
+                            nextTemperature[id] = val;
+                        }
+                    }
                 }
             }
         }
