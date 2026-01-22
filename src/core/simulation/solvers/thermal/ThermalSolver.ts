@@ -60,11 +60,18 @@ export class ThermalSolver {
             obj.mesh.updateWorldMatrix(true);
         }
 
+        
+        for (const obj of simulation.objects) {
+            const grid = state.grids.get(obj.id)!;
+            applyBoundaryConditions(obj.id, grid, simulation);
+        }
+
         for (const obj of simulation.objects) {
             const grid = state.grids.get(obj.id)!;
             grid.nextTemperature.set(grid.temperature);
             this.solveImplicitDiffusion(obj, grid, dt);
         }
+
         
         ThermalCoupling.apply(simulation, state.grids, dt);
         
