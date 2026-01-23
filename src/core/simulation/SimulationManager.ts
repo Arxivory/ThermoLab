@@ -31,4 +31,8 @@ export class SimulationManager {
 
         requestAnimationFrame(this.loop);
     }
+
+    isRunning() {
+        return this.running;
+    }
 }
