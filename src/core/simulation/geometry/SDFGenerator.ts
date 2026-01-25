@@ -13,6 +13,7 @@ export class SDFGenerator {
 
         const subDiv = 3;
         const totalSamples = subDiv ** 3;
+        const invSubDiv = 1.0 / subDiv;
 
         for (let k = 0; k < nz; k++) {
             for (let j = 0; j < ny; j++) {
@@ -22,9 +23,9 @@ export class SDFGenerator {
                     for (let sz = 0; sz < subDiv; sz++) {
                         for (let sy = 0; sy < subDiv; sy++) {
                             for (let sx = 0; sx < subDiv; sx++) {
-                                const x = origin.x + (i + (sx + 0.5) / subDiv) * dx;
-                                const y = origin.y + (j + (sy + 0.5) / subDiv) * dy;
-                                const z = origin.z + (k + (sz + 0.5) / subDiv) * dz;
+                                const x = origin.x + (i + (sx + 0.5) * invSubDiv) * dx;
+                                const y = origin.y + (j + (sy + 0.5) * invSubDiv) * dy;
+                                const z = origin.z + (k + (sz + 0.5) * invSubDiv) * dz;
 
                                 if (this.isPointInside(new THREE.Vector3(x, y, z), mesh)) {
                                     insideCount++;
@@ -41,8 +42,14 @@ export class SDFGenerator {
     }
 
     private static isPointInside(point: THREE.Vector3, mesh: THREE.Mesh): boolean {
-        const raycaster = new THREE.Raycaster(point, new THREE.Vector3(0, 1, 0));
-        const intersects = mesh.geometry.boundsTree!.raycastFirst(raycaster.ray, THREE.DoubleSide);
-        return mesh.geometry.boundsTree!.closestPointToPoint(point).distance < 0.001;
+        const raycaster = new THREE.Raycaster();
+
+        const dir = new THREE.Vector3(0, 1, 0);
+        raycaster.set(point, dir);
+
+        const intersects = mesh.geometry.boundsTree!.raycastFirst(raycaster.ray, mesh);
+
+        if (!intersects) return false;
+        return dir.dot(intersects.face!.normal) > 0;
     }
 }
