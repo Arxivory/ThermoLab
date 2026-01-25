@@ -46,5 +46,8 @@ export class ComputePipeline {
             Math.ceil(ny / 8),
             Math.ceil(nz / 8),
         )
+
+        passEncoder.end();
+        this.device.queue.submit([commandEncoder.finish()]);
     }
 }
