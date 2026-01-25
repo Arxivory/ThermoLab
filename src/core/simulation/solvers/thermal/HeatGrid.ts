@@ -12,7 +12,9 @@ export interface HeatGrid {
     origin: THREE.Vector3;
 
     temperature: Float32Array;
-    nextTemperature: Float32Array;
+
+    volumeFraction: Float32Array,
+    globalNodeIndices: Int32Array,
 
     objectId: string;
 }
