@@ -1,79 +1,130 @@
-import type { HeatGrid } from "../solvers/thermal/HeatGrid";
+import { THERMAL_KERNELS_SRC } from './ThermalKernels';
+import type { GlobalSystem } from '../solvers/thermal/MatrixAssembler';
 
 export class ComputePipeline {
     private device: GPUDevice;
     private pipeline: GPUComputePipeline;
-    private bindGroups: GPUBindGroup[] =[];
-    private buffers: { [key: string]: GPUBuffer } = {};
-    private currentInIndex = 0;
+    
+    private staticBindGroup: GPUBindGroup | null = null;
+    private dynamicBindGroups: GPUBindGroup[] = [];
+    
+    private pingPongBuffers: GPUBuffer[] = [];
+    private resultBuffer: GPUBuffer | null = null;
+    private bufferSize: number = 0;
+    
+    private currentReadIndex = 0;
 
-    constructor(device: GPUDevice, shaderSource: string) {
+    constructor(device: GPUDevice) {
         this.device = device;
-
+        const shaderModule = device.createShaderModule({ code: THERMAL_KERNELS_SRC });
         this.pipeline = device.createComputePipeline({
             layout: 'auto',
-            compute: {
-                module: device.createShaderModule({ code: shaderSource }),
-                entryPoint: 'main'
-            }
+            compute: { module: shaderModule, entryPoint: 'main' },
         });
     }
 
-    setupBuffers(grid: HeatGrid) {
-        const size = grid.temperature.byteLength;
+    setup(system: GlobalSystem, nx: number, ny: number) {
+        const { totalNodes, A, B, Kx, Ky, Kz, tempInitial } = system;
+        this.bufferSize = totalNodes * 4;
 
-        this.buffers.tempA = this.createBuffer(grid.temperature, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
-        this.buffers.tempB = this.createBuffer(grid.temperature, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
-        this.buffers.volume = this.createBuffer(grid.volumeFraction, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST);
-        this.buffers.cellType = this.createBuffer(grid.cellType, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST);
+        const bufA = this.createBuffer(A, GPUBufferUsage.STORAGE);
+        const bufB = this.createBuffer(B, GPUBufferUsage.STORAGE);
+        const bufKx = this.createBuffer(Kx, GPUBufferUsage.STORAGE);
+        const bufKy = this.createBuffer(Ky, GPUBufferUsage.STORAGE);
+        const bufKz = this.createBuffer(Kz, GPUBufferUsage.STORAGE);
 
-        const params = new Float32Array([grid.nx, grid.ny, grid.nz, grid.cx, grid.cy, grid.cz, 0]);
-        this.buffers.params = this.createBuffer(params, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
-
-        this.bindGroups[0] = this.createBindGroup(this.buffers.tempA, this.buffers.tempB);
-        this.bindGroups[1] = this.createBindGroup(this.buffers.tempB, this.buffers.tempA);
-    }
-
-    private createBindGroup(inBuf: GPUBuffer, outBuf: GPUBuffer) {
-        return this.device.createBindGroup({
+        this.staticBindGroup = this.device.createBindGroup({
             layout: this.pipeline.getBindGroupLayout(0),
             entries: [
-                { binding: 0, resource: { buffer: inBuf } },
-                { binding: 1, resource: { buffer: outBuf } },
-                { binding: 2, resource: { buffer: this.buffers.volume } },
-                { binding: 3, resource: { buffer: this.buffers.cellType } },
-                { binding: 4, resource: { buffer: this.buffers.params } }
+                { binding: 0, resource: { buffer: bufA } },
+                { binding: 1, resource: { buffer: bufB } },
+                { binding: 2, resource: { buffer: bufKx } },
+                { binding: 3, resource: { buffer: bufKy } },
+                { binding: 4, resource: { buffer: bufKz } },
             ]
-        })
+        });
+
+        const bufTemp1 = this.createBuffer(tempInitial, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+        const bufTemp2 = this.createBuffer(tempInitial, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST);
+        this.pingPongBuffers = [bufTemp1, bufTemp2];
+
+        const params = new Uint32Array([totalNodes, nx, nx * ny, 0]); 
+        const bufParams = this.createBuffer(params, GPUBufferUsage.UNIFORM);
+
+        this.dynamicBindGroups = [
+            this.device.createBindGroup({ 
+                layout: this.pipeline.getBindGroupLayout(1),
+                entries: [
+                    { binding: 0, resource: { buffer: bufTemp1 } },
+                    { binding: 1, resource: { buffer: bufTemp2 } },
+                    { binding: 2, resource: { buffer: bufParams } },
+                ]
+            }),
+            this.device.createBindGroup({ 
+                layout: this.pipeline.getBindGroupLayout(1),
+                entries: [
+                    { binding: 0, resource: { buffer: bufTemp2 } },
+                    { binding: 1, resource: { buffer: bufTemp1 } },
+                    { binding: 2, resource: { buffer: bufParams } },
+                ]
+            })
+        ];
+
+        this.resultBuffer = this.device.createBuffer({
+            size: this.bufferSize,
+            usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST
+        });
+        
+        this.currentReadIndex = 0;
     }
 
-    private createBuffer(data: ArrayBufferView, usage: number) {
+    run(iterations: number, totalNodes: number) {
+        const commandEncoder = this.device.createCommandEncoder();
+        const passEncoder = commandEncoder.beginComputePass();
+        passEncoder.setPipeline(this.pipeline);
+        
+        passEncoder.setBindGroup(0, this.staticBindGroup!);
+
+        const workgroups = Math.ceil(totalNodes / 64);
+
+        for (let i = 0; i < iterations; i++) {
+            passEncoder.setBindGroup(1, this.dynamicBindGroups[this.currentReadIndex]);
+            passEncoder.dispatchWorkgroups(workgroups);
+            this.currentReadIndex = 1 - this.currentReadIndex;
+        }
+
+        passEncoder.end();
+        this.device.queue.submit([commandEncoder.finish()]);
+    }
+
+    async getLatestTemperatures(): Promise<Float32Array> {
+        const validBuffer = this.pingPongBuffers[this.currentReadIndex];
+
+        const commandEncoder = this.device.createCommandEncoder();
+        commandEncoder.copyBufferToBuffer(validBuffer, 0, this.resultBuffer!, 0, this.bufferSize);
+        this.device.queue.submit([commandEncoder.finish()]);
+
+        await this.resultBuffer!.mapAsync(GPUMapMode.READ);
+        const result = new Float32Array(this.resultBuffer!.getMappedRange().slice(0));
+        this.resultBuffer!.unmap();
+        
+        return result;
+    }
+
+    private createBuffer(data: ArrayBufferView, usage: number): GPUBuffer {
         const buffer = this.device.createBuffer({
             size: data.byteLength,
             usage: usage,
             mappedAtCreation: true
         });
-        new (data.constructor as any)(buffer.getMappedRange()).set(data);
+        
+        if (data instanceof Float32Array) {
+            new Float32Array(buffer.getMappedRange()).set(data);
+        } else if (data instanceof Uint32Array) {
+            new Uint32Array(buffer.getMappedRange()).set(data);
+        }
+        
         buffer.unmap();
         return buffer;
-    }
-
-    run(iterations: number, nx: number, ny: number, nz: number) {
-        const commandEncoder = this.device.createCommandEncoder();
-
-        for (let i = 0; i < iterations; i++) {
-            const passEncoder = commandEncoder.beginComputePass();
-            passEncoder.setPipeline(this.pipeline);
-            passEncoder.setBindGroup(0, this.bindGroups[this.currentInIndex]);
-            passEncoder.dispatchWorkgroups(
-                Math.ceil(nx / 8),
-                Math.ceil(ny / 8),
-                Math.ceil(nz / 8)
-            );
-
-            this.currentInIndex = 1 - this.currentInIndex;
-        }
-
-        this.device.queue.submit([commandEncoder.finish()]);
     }
 }
