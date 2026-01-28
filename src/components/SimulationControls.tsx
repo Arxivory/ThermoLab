@@ -10,6 +10,10 @@ const SimulationControls = () => {
 
   const [isRunning, setIsRunning] = useState(simulationManager.isRunning());
 
+  const solve = () => {
+    simulationManager.solve(editorState);
+  }
+
   const play = () => {
     simulationManager.start(editorState);
     setIsRunning(simulationManager.isRunning());
@@ -23,7 +27,7 @@ const SimulationControls = () => {
 
   return (
     <div className="switch-panel horizontal">
-        <Lightbulb className="switch-panel-icon"/>
+        <Lightbulb className="switch-panel-icon" onClick={solve}/>
         <Play className={`switch-panel-icon ${isRunning && 'active'}`} onClick={play}/>
         <div className="switch-panel-vertical-separator"></div>
         <Pause className="switch-panel-icon"/>
