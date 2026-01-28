@@ -7,10 +7,10 @@ export class SimulationManager {
     private lastTime = 0;
     private running = false;
 
-    solve(editorState: EditorState) {
+    async solve(editorState: EditorState) {
         const compiled = SimulationCompiler.compile(editorState);
         this.runtime = new SimulationRuntime();
-        this.runtime.setup(compiled);
+        await this.runtime.setup(compiled);
         this.runtime.runSteadyState(1000);
     }
 

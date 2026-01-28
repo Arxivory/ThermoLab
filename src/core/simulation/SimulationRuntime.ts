@@ -42,6 +42,8 @@ export class SimulationRuntime {
 
         this.onComplete(results);
 
+        ThermalVisualizer.update(this.currentSimulation, results);
+
         return results;
     }
 
