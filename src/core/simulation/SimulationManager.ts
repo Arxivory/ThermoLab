@@ -7,9 +7,17 @@ export class SimulationManager {
     private lastTime = 0;
     private running = false;
 
+    solve(editorState: EditorState) {
+        const compiled = SimulationCompiler.compile(editorState);
+        this.runtime = new SimulationRuntime();
+        this.runtime.setup(compiled);
+        this.runtime.runSteadyState(1000);
+    }
+
     start(editorState: EditorState) {
         const compiled = SimulationCompiler.compile(editorState);
-        this.runtime = new SimulationRuntime(compiled);
+        this.runtime = new SimulationRuntime();
+        this.runtime.setup(compiled);
         this.running = true;
         this.lastTime = performance.now();
         this.loop();
@@ -27,7 +35,7 @@ export class SimulationManager {
         const dt = (now - this.lastTime) / 1000;
         this.lastTime = now;
 
-        this.runtime.step(dt);
+        //this.runtime.step(dt);
 
         requestAnimationFrame(this.loop);
     }
