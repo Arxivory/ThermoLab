@@ -1,4 +1,4 @@
-import { Play, Pause, Square } from "lucide-react";
+import { Play, Pause, Square, Lightbulb } from "lucide-react";
 import { useEditorStore } from "../store/editorStore";
 import { SimulationManager } from "../core/simulation/SimulationManager";
 import { useRef, useState } from "react";
@@ -23,6 +23,7 @@ const SimulationControls = () => {
 
   return (
     <div className="switch-panel horizontal">
+        <Lightbulb className="switch-panel-icon"/>
         <Play className={`switch-panel-icon ${isRunning && 'active'}`} onClick={play}/>
         <div className="switch-panel-vertical-separator"></div>
         <Pause className="switch-panel-icon"/>
