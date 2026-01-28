@@ -11,9 +11,14 @@ export class SDFGenerator {
             mesh.geometry.boundsTree = new MeshBVH(mesh.geometry);
         }
 
+        const inverseMatrix = mesh.matrixWorld.clone().invert();
+
         const subDiv = 3;
         const totalSamples = subDiv ** 3;
         const invSubDiv = 1.0 / subDiv;
+
+        const worldPoint = new THREE.Vector3();
+        const localPoint = new THREE.Vector3();
 
         for (let k = 0; k < nz; k++) {
             for (let j = 0; j < ny; j++) {
@@ -23,11 +28,15 @@ export class SDFGenerator {
                     for (let sz = 0; sz < subDiv; sz++) {
                         for (let sy = 0; sy < subDiv; sy++) {
                             for (let sx = 0; sx < subDiv; sx++) {
-                                const x = origin.x + (i + (sx + 0.5) * invSubDiv) * dx;
-                                const y = origin.y + (j + (sy + 0.5) * invSubDiv) * dy;
-                                const z = origin.z + (k + (sz + 0.5) * invSubDiv) * dz;
+                                worldPoint.set(
+                                    origin.x + (i + (sx + 0.5) * invSubDiv) * dx,
+                                    origin.y + (j + (sy + 0.5) * invSubDiv) * dy,
+                                    origin.z + (k + (sz + 0.5) * invSubDiv) * dz
+                                );
 
-                                if (this.isPointInside(new THREE.Vector3(x, y, z), mesh)) {
+                                localPoint.copy(worldPoint).applyMatrix4(inverseMatrix);
+                                
+                                if (this.isPointInside(localPoint, mesh)) {
                                     insideCount++;
                                 }
                             }
@@ -41,15 +50,19 @@ export class SDFGenerator {
         return fractions;
     }
 
-    private static isPointInside(point: THREE.Vector3, mesh: THREE.Mesh): boolean {
-        const raycaster = new THREE.Raycaster();
+    private static isPointInside(localPoint: THREE.Vector3, mesh: THREE.Mesh): boolean {
+        const ray = new THREE.Ray(localPoint, new THREE.Vector3(0, 1, 0));
+        let intersectionCount = 0;
 
-        const dir = new THREE.Vector3(0, 1, 0);
-        raycaster.set(point, dir);
+        mesh.geometry.boundsTree!.shapecast({
+            intersectsBounds: (box) => ray.intersectsBox(box),
+            intersectsTriangle: (tri) => {
+                if (ray.intersectTriangle(tri.a, tri.b, tri.c, false, new THREE.Vector3())) {
+                    intersectionCount++;
+                }
+            }
+        })
 
-        const intersects = mesh.geometry.boundsTree!.raycastFirst(raycaster.ray, mesh);
-
-        if (!intersects) return false;
-        return dir.dot(intersects.face!.normal) > 0;
+        return (intersectionCount % 2) !== 0;
     }
 }

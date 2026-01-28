@@ -6,7 +6,7 @@ export class MeshVoxelizer {
     static voxelize(object: any, resolution: number = 20): HeatGrid {
         const mesh = object.mesh;
 
-        mesh.updateMatrixWorld();
+        mesh.updateMatrixWorld(true);
         const bbox = new THREE.Box3().setFromObject(mesh);
         const size = new THREE.Vector3();
         bbox.getSize(size);
@@ -32,6 +32,7 @@ export class MeshVoxelizer {
             temperature: new Float32Array(nx * ny * nz).fill(293.15),
             volumeFraction: new Float32Array(nx * ny * nz),
             globalNodeIndices: new Int32Array(nx * ny * nz).fill(-1),
+            cellType: new Uint32Array(nx * ny * nz).fill(0),
             objectId: object.id
         };
 

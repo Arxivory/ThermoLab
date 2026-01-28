@@ -17,9 +17,5 @@ export interface HeatGrid {
     globalNodeIndices: Int32Array,
     cellType: Uint32Array,
 
-    cx: number,
-    cy: number,
-    cz: number,
-
     objectId: string;
 }
