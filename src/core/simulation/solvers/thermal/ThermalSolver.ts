@@ -18,7 +18,7 @@ export class ThermalSolver {
     async initialize(simulation: CompiledSimulation) {
         this.device = await GPUDeviceManager.getDevice();
 
-        this.grids = simulation.objects.map(obj => MeshVoxelizer.voxelize(obj, 20));
+        this.grids = MeshVoxelizer.voxelizeMultiple(simulation.objects, 20);
 
         this.applyBoundaryConditions(simulation);
         
@@ -30,6 +30,7 @@ export class ThermalSolver {
         this.pipeline.setup(this.system, masterGrid.nx, masterGrid.ny);
 
         console.log(`Thermal Solver Initialized: ${this.system.totalNodes} overall nodes.`);
+        console.log(`Unified grid: ${masterGrid.nx}x${masterGrid.ny}x${masterGrid.nz}`);
         return this.grids;
     }
 

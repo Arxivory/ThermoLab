@@ -13,9 +13,11 @@ export interface HeatGrid {
 
     temperature: Float32Array;
 
-    volumeFraction: Float32Array,
-    globalNodeIndices: Int32Array,
-    cellType: Uint32Array,
+    volumeFraction: Float32Array;
+    globalNodeIndices: Int32Array;
+    cellType: Uint32Array;
+    objectIds?: Uint32Array;
 
     objectId: string;
+    objectIdMap?: Map<string, number>;
 }
