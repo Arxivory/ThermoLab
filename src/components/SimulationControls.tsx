@@ -28,11 +28,11 @@ const SimulationControls = () => {
   return (
     <div className="switch-panel horizontal">
         <Lightbulb className="switch-panel-icon" onClick={solve}/>
-        <Play className={`switch-panel-icon ${isRunning && 'active'}`} onClick={play}/>
+        {/* <Play className={`switch-panel-icon ${isRunning && 'active'}`} onClick={play}/>
         <div className="switch-panel-vertical-separator"></div>
         <Pause className="switch-panel-icon"/>
         <div className="switch-panel-vertical-separator"></div>
-        <Square className="switch-panel-icon" onClick={stop}/>
+        <Square className="switch-panel-icon" onClick={stop}/> */}
     </div>
   )
 }
