@@ -120,6 +120,16 @@ export class SimulationCompiler {
                         space: tool.parameters.space
                     });
                     break;
+
+                case "INTERNAL_HEAT":
+                    sources.push({
+                        kind: "INTERNAL_HEAT",
+                        objectId: tool.target.id,
+                        power: tool.parameters.power,
+                        distribution: tool.parameters.distribution,
+                        radius: tool.parameters.radius
+                    });
+                    break;
             }
         }
 
