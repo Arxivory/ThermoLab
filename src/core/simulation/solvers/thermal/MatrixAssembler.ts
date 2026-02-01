@@ -39,7 +39,10 @@ export class MatrixAssembler {
                     for (let i = 0; i < ref.objectIds!.length; i++) {
                         if (ref.objectIds![i] === internalIdx && ref.volumeFraction[i] > 0) objNodeCount++;
                     }
-                    idToPowerDensity[internalIdx] = source.power / (dx * dy * dz * objNodeCount);
+                    
+                    if (objNodeCount > 0) {
+                        idToPowerDensity[internalIdx] = source.power / objNodeCount;
+                    }
                 }
             }
         }
