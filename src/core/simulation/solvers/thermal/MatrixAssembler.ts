@@ -35,8 +35,10 @@ export class MatrixAssembler {
                 idToK[internalIdx] = obj.material.thermalConductivity;
                 
                 if (source) {
+                    console.log(`Assigning source power density for object ${objId}: ${source.power} W`);
                     let objNodeCount = 0;
                     for (let i = 0; i < ref.objectIds!.length; i++) {
+                        console.log(ref.objectIds![i] === internalIdx, ' and ', ref.volumeFraction[i] > 0);
                         if (ref.objectIds![i] === internalIdx && ref.volumeFraction[i] > 0) objNodeCount++;
                     }
                     
