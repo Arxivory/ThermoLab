@@ -55,6 +55,7 @@ export class MeshVoxelizer {
             }
 
             unifiedGrid.objectIdMap!.set(obj.id, objIdx);
+            console.log(`[MeshVoxelizer] Object ${objIdx}: "${obj.id}" -> internalIdx=${objIdx}`);
 
             const objectVolumeFractions = SDFGenerator.computeVolumeFractions(mesh, unifiedGrid);
 
@@ -67,6 +68,19 @@ export class MeshVoxelizer {
                     }
                 }
             }
+        }
+
+        console.log(`[MeshVoxelizer] Unified grid created: ${nx}x${ny}x${nz} = ${totalCells} cells`);
+        const cellsPerObject = new Map<number, number>();
+        for (let i = 0; i < totalCells; i++) {
+            const objIdx = unifiedGrid.objectIds![i];
+            if (objIdx !== 255) {
+                cellsPerObject.set(objIdx, (cellsPerObject.get(objIdx) || 0) + 1);
+            }
+        }
+        for (const [objIdx, count] of cellsPerObject) {
+            const objId = Array.from(unifiedGrid.objectIdMap!.entries()).find(([_, idx]) => idx === objIdx)?.[0];
+            console.log(`[MeshVoxelizer] Object idx=${objIdx} ("${objId}"): ${count} cells`);
         }
 
         const perObjectGrids: HeatGrid[] = objects.map((obj, objIdx) => {

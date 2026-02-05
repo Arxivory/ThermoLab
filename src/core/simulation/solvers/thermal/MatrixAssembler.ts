@@ -27,6 +27,10 @@ export class MatrixAssembler {
         const idToK = new Float32Array(256); 
         const idToPowerDensity = new Float32Array(256); 
 
+        console.log(`[MatrixAssembler] objectIdMap entries:`, Array.from(ref.objectIdMap!.entries()));
+        console.log(`[MatrixAssembler] objectIds array length: ${ref.objectIds!.length}`);
+        console.log(`[MatrixAssembler] Unique values in objectIds:`, new Set(Array.from(ref.objectIds!)));
+        
         for (const [objId, internalIdx] of ref.objectIdMap!) {
             const obj = sim.objects.find(o => o.id === objId);
             const source = sim.sources.find(s => s.objectId === objId);
@@ -35,15 +39,28 @@ export class MatrixAssembler {
                 idToK[internalIdx] = obj.material.thermalConductivity;
                 
                 if (source) {
-                    console.log(`Assigning source power density for object ${objId}: ${source.power} W`);
+                    console.log(`[MatrixAssembler] Processing source for object "${objId}" with internalIdx=${internalIdx}, power=${source.power}W`);
+                    
                     let objNodeCount = 0;
+                    let firstMatches: string[] = [];
+                    
                     for (let i = 0; i < ref.objectIds!.length; i++) {
-                        console.log(ref.objectIds![i] === internalIdx, ' and ', ref.volumeFraction[i] > 0);
-                        if (ref.objectIds![i] === internalIdx && ref.volumeFraction[i] > 0) objNodeCount++;
+                        if (ref.objectIds![i] === internalIdx && ref.volumeFraction[i] > 0) {
+                            objNodeCount++;
+                            if (firstMatches.length < 3) {
+                                firstMatches.push(`idx[${i}]`);
+                            }
+                        }
                     }
+                    
+                    console.log(`[MatrixAssembler] Found ${objNodeCount} active cells for object "${objId}", first few: ${firstMatches.join(', ')}`);
                     
                     if (objNodeCount > 0) {
                         idToPowerDensity[internalIdx] = source.power / objNodeCount;
+                        console.log(`[MatrixAssembler] Set idToPowerDensity[${internalIdx}] = ${idToPowerDensity[internalIdx].toFixed(6)} W/cell`);
+                    } else {
+                        console.warn(`[MatrixAssembler] NO CELLS FOUND for object "${objId}"! objectIdMap may be misaligned with objectIds array.`);
+                        console.warn(`[MatrixAssembler] Expected internalIdx=${internalIdx}, but objectIds contains:`, [...new Set(Array.from(ref.objectIds!))]);
                     }
                 }
             }
