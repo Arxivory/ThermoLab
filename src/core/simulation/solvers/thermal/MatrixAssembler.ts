@@ -39,28 +39,17 @@ export class MatrixAssembler {
                 idToK[internalIdx] = obj.material.thermalConductivity;
                 
                 if (source) {
-                    console.log(`[MatrixAssembler] Processing source for object "${objId}" with internalIdx=${internalIdx}, power=${source.power}W`);
+                    let effectiveVolume = 0;
+                    const objGrid = grids.find(g => g.objectId === objId);
                     
-                    let objNodeCount = 0;
-                    let firstMatches: string[] = [];
-                    
-                    for (let i = 0; i < ref.objectIds!.length; i++) {
-                        if (ref.objectIds![i] === internalIdx && ref.volumeFraction[i] > 0) {
-                            objNodeCount++;
-                            if (firstMatches.length < 3) {
-                                firstMatches.push(`idx[${i}]`);
-                            }
+                    if (objGrid) {
+                        for (let i = 0; i < objGrid.volumeFraction.length; i++) {
+                            effectiveVolume += objGrid.volumeFraction[i];
                         }
                     }
-                    
-                    console.log(`[MatrixAssembler] Found ${objNodeCount} active cells for object "${objId}", first few: ${firstMatches.join(', ')}`);
-                    
-                    if (objNodeCount > 0) {
-                        idToPowerDensity[internalIdx] = source.power / objNodeCount;
-                        console.log(`[MatrixAssembler] Set idToPowerDensity[${internalIdx}] = ${idToPowerDensity[internalIdx].toFixed(6)} W/cell`);
-                    } else {
-                        console.warn(`[MatrixAssembler] NO CELLS FOUND for object "${objId}"! objectIdMap may be misaligned with objectIds array.`);
-                        console.warn(`[MatrixAssembler] Expected internalIdx=${internalIdx}, but objectIds contains:`, [...new Set(Array.from(ref.objectIds!))]);
+
+                    if (effectiveVolume > 0) {
+                        idToPowerDensity[internalIdx] = source.power / effectiveVolume;
                     }
                 }
             }
@@ -113,7 +102,7 @@ export class MatrixAssembler {
                     }
 
                     A[gIdx] = selfCoeff;
-                    B[gIdx] = idToPowerDensity[selfObjIdx]; 
+                    B[gIdx] = idToPowerDensity[selfObjIdx] * phi_self; 
                 }
             }
         }

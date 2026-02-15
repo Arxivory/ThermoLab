@@ -63,7 +63,7 @@ export class MeshVoxelizer {
                 const phi = objectVolumeFractions[i];
                 if (phi > 0) {
                     unifiedGrid.volumeFraction[i] += phi;
-                    if (unifiedGrid.objectIds![i] === 255) {
+                    if (phi > 0.5 || unifiedGrid.objectIds![i] === 255) {
                         unifiedGrid.objectIds![i] = objIdx;
                     }
                 }
