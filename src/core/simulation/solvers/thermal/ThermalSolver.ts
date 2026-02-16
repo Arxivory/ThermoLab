@@ -2,6 +2,7 @@ import { MeshVoxelizer } from "../../geometry/MeshVoxelixer";
 import { ComputePipeline } from "../../gpu/ComputePipeline";
 import { GPUDeviceManager } from "../../gpu/GPUDeviceManager";
 import type { CompiledSimulation } from "../../types/CompiledSimulation";
+import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
 import { MatrixAssembler, type GlobalSystem } from "./MatrixAssembler";
 
@@ -19,14 +20,16 @@ export class ThermalSolver {
         this.device = await GPUDeviceManager.getDevice();
 
         this.grids = MeshVoxelizer.voxelizeMultiple(simulation.objects, 20);
+        
+        const masterGrid = this.grids[0];
 
         this.applyBoundaryConditions(simulation);
+        //applyBoundaryConditions(this.grids, simulation)
         
         this.system = MatrixAssembler.assemble(this.grids, simulation);
 
         this.pipeline = new ComputePipeline(this.device);
 
-        const masterGrid = this.grids[0];
         this.pipeline.setup(this.system, masterGrid.nx, masterGrid.ny);
 
         console.log(`Thermal Solver Initialized: ${this.system.totalNodes} overall nodes.`);
