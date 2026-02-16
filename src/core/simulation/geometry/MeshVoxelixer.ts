@@ -94,7 +94,7 @@ export class MeshVoxelizer {
                 cellType: unifiedGrid.cellType,
                 objectIds: unifiedGrid.objectIds,
                 objectId: obj.id,
-                objectIdMap: unifiedGrid.objectIdMap
+                objectIdMap: new Map(unifiedGrid.objectIdMap)
             };
 
             for (let i = 0; i < totalCells; i++) {
