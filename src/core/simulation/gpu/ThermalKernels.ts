@@ -19,26 +19,25 @@ struct Params {
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) id : vec3<u32>) {
     let idx = id.x;
-    
     if (idx >= p.total_nodes) { return; }
 
     let a_val = A[idx];
 
-    if (a_val == 0.0) {
-        temp_out[idx] = temp_in[idx];
+    if (a_val < 0.0) {
+        temp_out[idx] = B[idx];
         return;
     }
 
     var sum_flux = 0.0;
 
-    if (idx < p.total_nodes - 1u) {
+    if ((idx % p.stride_y) < (p.stride_y - 1u)) {
         sum_flux += Kx[idx] * temp_in[idx + 1u];
     }
-    if (idx > 0u) {
+    if ((idx % p.stride_y) > 0u) {
         sum_flux += Kx[idx - 1u] * temp_in[idx - 1u];
     }
 
-    if (idx + p.stride_y < p.total_nodes) {
+    if ((idx / p.stride_y % (p.stride_z / p.stride_y)) < (p.stride_z / p.stride_y - 1u)) {
         sum_flux += Ky[idx] * temp_in[idx + p.stride_y];
     }
     if (idx >= p.stride_y) {
