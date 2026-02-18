@@ -45,13 +45,11 @@ export class MatrixAssembler {
 
             const source = sim.sources.find(s => s.objectId === obj.id);
             if (source && source.kind === "INTERNAL_HEAT") {
-                // let sumPhi = 0;
-                // for (let v of objGrid.volumeFraction) sumPhi += v;
-                // if (sumPhi > 1e-9) {
-                //     idToPowerDensity[internalIdx] = source.power / (sumPhi * cellVolume);
-                // }
-                console.log('yes it is internal');
-                idToPowerDensity[internalIdx] = 10000.0;
+                let sumPhi = 0;
+                for (let v of objGrid.volumeFraction) sumPhi += v;
+                if (sumPhi > 1e-9) {
+                    idToPowerDensity[internalIdx] = (source.power / (sumPhi * cellVolume)) * 1000.0;
+                }
             }
         }
 
