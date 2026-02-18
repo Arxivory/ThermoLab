@@ -11,7 +11,7 @@ export class SimulationManager {
         const compiled = SimulationCompiler.compile(editorState);
         this.runtime = new SimulationRuntime();
         await this.runtime.setup(compiled);
-        this.runtime.runSteadyState(1000);
+        this.runtime.runSteadyState(5000);
     }
 
     start(editorState: EditorState) {
