@@ -71,9 +71,8 @@ export class ThermalSolver {
     private mapResultsToGrids(results: Float32Array) {
         for (const grid of this.grids) {
             for (let i = 0; i < grid.volumeFraction.length; i++) {
-                const gIdx = grid.globalNodeIndices[i];
-                if (gIdx !== -1) {
-                    grid.temperature[i] = results[gIdx];
+                if (grid.volumeFraction[i] > 0) {
+                    grid.temperature[i] = results[i];
                 }
             }
         }
