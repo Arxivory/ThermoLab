@@ -117,8 +117,4 @@ export class MatrixAssembler {
 
         return { totalNodes, A, B, Kx, Ky, Kz, tempInitial };
     }
-
-    private static mapGlobalIndices(grids: HeatGrid[]): number {
-        return grids[0].nx * grids[0].ny * grids[0].nz;
-    }
 }
