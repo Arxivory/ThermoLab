@@ -48,7 +48,7 @@ export class MatrixAssembler {
                 let sumPhi = 0;
                 for (let v of objGrid.volumeFraction) sumPhi += v;
                 if (sumPhi > 1e-9) {
-                    idToPowerDensity[internalIdx] = (source.power / (sumPhi * cellVolume)) * 1000.0;
+                    idToPowerDensity[internalIdx] = (source.power / (sumPhi * cellVolume));
                 }
             }
         }
