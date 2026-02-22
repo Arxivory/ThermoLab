@@ -14,7 +14,12 @@ export interface GlobalSystem {
 export class MatrixAssembler {
     static assemble(grids: HeatGrid[], sim: CompiledSimulation): GlobalSystem {
         const ref = grids[0];
-        const { nx, ny, nz, dx, dy, dz } = ref;
+        const { nx, ny, nz } = ref;
+        const unitScale = 0.001;
+        const dx = ref.dx * unitScale;
+        const dy = ref.dy * unitScale;
+        const dz = ref.dz * unitScale;
+
         const totalNodes = nx * ny * nz;
         const cellVolume = dx * dy * dz;
 
