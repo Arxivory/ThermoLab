@@ -24,7 +24,6 @@ export class ThermalSolver {
         const masterGrid = this.grids[0];
 
         this.applyBoundaryConditions(simulation);
-        //applyBoundaryConditions(this.grids, simulation)
         
         this.system = MatrixAssembler.assemble(this.grids, simulation);
 
