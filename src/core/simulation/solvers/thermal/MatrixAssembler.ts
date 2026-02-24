@@ -67,7 +67,11 @@ export class MatrixAssembler {
                 }
             }
 
-            if (!activeGrid) continue;
+            if (!activeGrid) { 
+                A[i] = 1.0;
+                B[i] = 293.0;
+                continue; 
+            }
 
             const selfObjIdx = activeGrid.objectIds![i];
             const k_self = idToK[selfObjIdx];
@@ -77,7 +81,7 @@ export class MatrixAssembler {
             let isFixed = false;
             for (const g of grids) {
                 if (g.cellType[i] === 1 && g.volumeFraction[i] > 0) {
-                    A[i] = -1.0;
+                    A[i] = 1.0;
                     B[i] = g.temperature[i];
                     isFixed = true;
                     break;
@@ -87,9 +91,12 @@ export class MatrixAssembler {
 
             let selfCoeff = 0;
             const neighbors = [
-                { off: 1, arr: Kx, valid: (i % nx) < nx - 1, d2: dx*dx },
-                { off: nx, arr: Ky, valid: (Math.floor(i/nx) % ny) < ny - 1, d2: dy*dy },
-                { off: nx * ny, arr: Kz, valid: i < nx*ny*(nz-1), d2: dz*dz }
+                { off: 1,       d2: dx*dx, arr: Kx, valid: (i % nx) < nx - 1 },
+                { off: nx,      d2: dy*dy, arr: Ky, valid: (Math.floor(i/nx) % ny) < ny - 1 },
+                { off: nx * ny, d2: dz*dz, arr: Kz, valid: i < nx*ny*(nz-1) },
+                { off: -1,      d2: dx*dx, arr: null, valid: (i % nx) > 0 },
+                { off: -nx,     d2: dy*dy, arr: null, valid: (Math.floor(i/nx) % ny) > 0 },
+                { off: -nx * ny,d2: dz*dz, arr: null, valid: i >= nx*ny }
             ];
 
             for (const n of neighbors) {
@@ -105,18 +112,16 @@ export class MatrixAssembler {
                         break;
                     }
                 }
-                if (neighborPhi <= 0) continue;
 
-                const k_neighbor = idToK[neighborObjIdx];
+                const k_neighbor = neighborPhi > 0 ? idToK[neighborObjIdx] : 0.026;
                 const k_int = (2 * k_self * k_neighbor) / (k_self + k_neighbor + 1e-9);
-                const weight = (k_int / n.d2) * Math.min(phi_self, neighborPhi);
+                const weight = (k_int / n.d2) * Math.min(phi_self, Math.max(0.001, neighborPhi));
 
-                n.arr[i] = weight;
                 selfCoeff += weight;
-                A[ni] += weight; 
+                if (n.arr) n.arr[i] = weight; 
             }
 
-            A[i] += selfCoeff;
+            A[i] = selfCoeff;
             B[i] = (idToPowerDensity[selfObjIdx] * phi_self);
         }
 
