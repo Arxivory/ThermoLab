@@ -23,8 +23,8 @@ export function initRenderer(canvas: HTMLCanvasElement) {
 
   scene = new THREE.Scene()
 
-  camera = new THREE.PerspectiveCamera(20, width / height, 0.1, 1000)
-  camera.position.set(6, 6, 6)
+  camera = new THREE.PerspectiveCamera(15, width / height, 0.1, 1000)
+  camera.position.set(10, 10, 10)
 
   renderer = new THREE.WebGLRenderer({
     canvas,
