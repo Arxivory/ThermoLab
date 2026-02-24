@@ -15,8 +15,6 @@ let controls: OrbitControls
 let width: number
 let height: number
 
-let animationId: number | null = null
-
 export function initRenderer(canvas: HTMLCanvasElement) {
   width = canvas.clientWidth
   height = canvas.clientHeight
