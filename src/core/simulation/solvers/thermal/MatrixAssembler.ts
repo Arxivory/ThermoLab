@@ -114,15 +114,24 @@ export class MatrixAssembler {
                 }
 
                 const k_neighbor = neighborPhi > 0 ? idToK[neighborObjIdx] : 0.026;
-                const k_int = (2 * k_self * k_neighbor) / (k_self + k_neighbor + 1e-9);
+                let k_int = (2 * k_self * k_neighbor) / (k_self + k_neighbor + 1e-9);
+
+                if (neighborPhi > 0 && selfObjIdx !== neighborObjIdx)
+                    k_int *= 0.1;
+
                 const weight = (k_int / n.d2) * Math.min(phi_self, Math.max(0.001, neighborPhi));
 
                 selfCoeff += weight;
                 if (n.arr) n.arr[i] = weight; 
             }
 
-            A[i] = selfCoeff;
+            A[i] = Math.max(selfCoeff, 1e-4);
             B[i] = (idToPowerDensity[selfObjIdx] * phi_self);
+
+            if (isFixed) {
+                A[i] = 1.0;
+                B[i] = activeGrid.temperature[i];
+            }
         }
 
         return { totalNodes, A, B, Kx, Ky, Kz, tempInitial };

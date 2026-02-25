@@ -51,6 +51,9 @@ fn main(@builtin(global_invocation_id) id : vec3<u32>) {
         sum_flux += Kz[idx - p.stride_z] * temp_in[idx - p.stride_z];
     }
 
-    temp_out[idx] = (sum_flux + B[idx]) / a_val;
+    let next_temp = (sum_flux + B[idx]) / a_val;
+
+    let omega = 0.8; 
+    temp_out[idx] = (omega * next_temp) + ((1.0 - omega) * temp_in[idx]);
 }
 `;

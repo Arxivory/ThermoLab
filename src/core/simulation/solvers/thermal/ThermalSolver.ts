@@ -44,7 +44,8 @@ export class ThermalSolver {
         this.pipeline.run(iterations, this.system.totalNodes);
 
         const results = await this.pipeline.getLatestTemperatures();
-        console.log(Math.max(...results));
+        console.log('Min: ', Math.min(...results));
+        console.log('Max: ', Math.max(...results));
 
         this.mapResultsToGrids(results);
 
