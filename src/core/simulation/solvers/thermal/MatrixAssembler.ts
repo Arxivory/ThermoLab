@@ -30,8 +30,8 @@ export class MatrixAssembler {
         const Kz = new Float32Array(totalNodes).fill(0);
         const tempInitial = new Float32Array(totalNodes).fill(293.0);
 
-        const idToK = new Float32Array(256).fill(0.026);
-        const idToPowerDensity = new Float32Array(256).fill(0); 
+        const idToK = new Float32Array(totalNodes).fill(0.026);
+        const idToPowerDensity = new Float32Array(totalNodes).fill(0); 
 
         for (const obj of sim.objects) {
             const objGrid = grids.find(g => g.objectId === obj.id);
