@@ -68,7 +68,7 @@ export class MatrixAssembler {
             }
 
             if (!activeGrid) { 
-                A[i] = 1.0;
+                A[i] = -1.0;
                 B[i] = 293.0;
                 continue; 
             }
@@ -81,7 +81,7 @@ export class MatrixAssembler {
             let isFixed = false;
             for (const g of grids) {
                 if (g.cellType[i] === 1 && g.volumeFraction[i] > 0) {
-                    A[i] = 1.0;
+                    A[i] = -1.0;
                     B[i] = g.temperature[i];
                     isFixed = true;
                     break;
