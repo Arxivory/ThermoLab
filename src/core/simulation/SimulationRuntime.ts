@@ -1,4 +1,3 @@
-import { MotionSolver } from "./solvers/MotionSolver";
 import type { HeatGrid } from "./solvers/thermal/HeatGrid";
 import { ThermalSolver } from "./solvers/thermal/ThermalSolver";
 import type { CompiledSimulation } from "./types/CompiledSimulation";
