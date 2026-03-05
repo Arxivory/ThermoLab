@@ -78,16 +78,11 @@ export class MatrixAssembler {
             const phi_self = activeGrid.volumeFraction[i];
             tempInitial[i] = activeGrid.temperature[i];
 
-            let isFixed = false;
-            for (const g of grids) {
-                if (g.cellType[i] === 1 && g.volumeFraction[i] > 0) {
-                    A[i] = -1.0;
-                    B[i] = g.temperature[i];
-                    isFixed = true;
-                    break;
-                }
+            if (activeGrid.cellType[i] === 1 && activeGrid.volumeFraction[i] > 0.5) {
+                A[i] = -1.0;
+                B[i] = activeGrid.temperature[i];
+                continue;
             }
-            if (isFixed) continue;
 
             let selfCoeff = 0;
             const neighbors = [
@@ -117,21 +112,24 @@ export class MatrixAssembler {
                 let k_int = (2 * k_self * k_neighbor) / (k_self + k_neighbor + 1e-9);
 
                 if (neighborPhi > 0 && selfObjIdx !== neighborObjIdx)
-                    k_int *= 0.1;
+                    k_int *= 0.05;
 
-                const weight = (k_int / n.d2) * Math.min(phi_self, Math.max(0.001, neighborPhi));
+                const volumeWeight = (phi_self * neighborPhi > 0) 
+                    ? 2 * (phi_self * neighborPhi) / (phi_self + neighborPhi) 
+                    : phi_self;  
+
+                const weight = (k_int / n.d2) * volumeWeight;
 
                 selfCoeff += weight;
                 if (n.arr) n.arr[i] = weight; 
             }
 
             A[i] = Math.max(selfCoeff, 1e-4);
-            B[i] = (idToPowerDensity[selfObjIdx] * phi_self);
+            B[i] = Math.min(
+                (idToPowerDensity[selfObjIdx] * phi_self),
+                A[i] * 10 
+            );
 
-            if (isFixed) {
-                A[i] = 1.0;
-                B[i] = activeGrid.temperature[i];
-            }
         }
 
         return { totalNodes, A, B, Kx, Ky, Kz, tempInitial };

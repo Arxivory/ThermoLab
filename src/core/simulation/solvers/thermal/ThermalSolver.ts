@@ -2,6 +2,7 @@ import { MeshVoxelizer } from "../../geometry/MeshVoxelixer";
 import { ComputePipeline } from "../../gpu/ComputePipeline";
 import { GPUDeviceManager } from "../../gpu/GPUDeviceManager";
 import type { CompiledSimulation } from "../../types/CompiledSimulation";
+import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
 import { MatrixAssembler, type GlobalSystem } from "./MatrixAssembler";
 
@@ -50,19 +51,72 @@ export class ThermalSolver {
     }
 
     private applyBoundaryConditions(simulation: CompiledSimulation) {
+        // Build unified volumeFraction FIRST
+        const masterGrid = this.grids[0];
+        const unifiedVolumeFraction = new Float32Array(masterGrid.temperature.length).fill(0);
+        
+        for (const grid of this.grids) {
+            for (let i = 0; i < grid.volumeFraction.length; i++) {
+                unifiedVolumeFraction[i] = Math.max(unifiedVolumeFraction[i], grid.volumeFraction[i]);
+            }
+        }
+
         for (const bc of simulation.boundaryConditions) {
             const grid = this.grids.find(g => g.objectId === bc.objectId);
             if (!grid) continue;
 
             if (bc.kind === "FIXED_TEMPERATURE") {
+                const { nx, ny, nz } = grid;
+
                 for (let i = 0; i < grid.volumeFraction.length; i++) {
-                    if (grid.volumeFraction[i] > 0) {
+                    if (grid.volumeFraction[i] <= 0) continue;
+
+                    let shouldApply = false;
+
+                    if (bc.applyTo === "VOLUME") {
+                        shouldApply = true;
+                    } else if (bc.applyTo === "SURFACE") {
+                        // Check against UNIFIED grid, not per-object grid
+                        shouldApply = this.isSurfaceCell(i, unifiedVolumeFraction, nx, ny, nz);
+                    }
+
+                    if (shouldApply) {
                         grid.cellType[i] = 1;
-                        grid.temperature[i] = bc.temperature;
                     }
                 }
             }
         }
+    }
+
+    private isSurfaceCell(i: number, unifiedVolumeFraction: Float32Array, nx: number, ny: number, nz: number): boolean {
+        const x = i % nx;
+        const y = Math.floor(i / nx) % ny;
+        const z = Math.floor(i / (nx * ny));
+
+        const neighbors = [
+            { dx: 1, dy: 0, dz: 0 }, { dx: -1, dy: 0, dz: 0 },
+            { dx: 0, dy: 1, dz: 0 }, { dx: 0, dy: -1, dz: 0 },
+            { dx: 0, dy: 0, dz: 1 }, { dx: 0, dy: 0, dz: -1 }
+        ];
+
+        for (const n of neighbors) {
+            const nx_ = x + n.dx;
+            const ny_ = y + n.dy;
+            const nz_ = z + n.dz;
+
+            // At domain boundary
+            if (nx_ < 0 || nx_ >= nx || ny_ < 0 || ny_ >= ny || nz_ < 0 || nz_ >= nz) {
+                return true;
+            }
+
+            // Next to empty space (check unified grid)
+            const ni = nx_ + nx * (ny_ + ny * nz_);
+            if (unifiedVolumeFraction[ni] < 0.1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private mapResultsToGrids(results: Float32Array) {
