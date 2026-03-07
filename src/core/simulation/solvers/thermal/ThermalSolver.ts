@@ -23,7 +23,7 @@ export class ThermalSolver {
         
         const masterGrid = this.grids[0];
 
-        this.applyBoundaryConditions(simulation);
+        this.applyBoundaryConditionsLegacy(simulation);
         
         this.system = MatrixAssembler.assemble(this.grids, simulation);
 
@@ -48,6 +48,22 @@ export class ThermalSolver {
         this.mapResultsToGrids(results);
 
         return this.grids;
+    }
+
+    private applyBoundaryConditionsLegacy(simulation: CompiledSimulation) {
+        for (const bc of simulation.boundaryConditions) {
+            const grid = this.grids.find(g => g.objectId === bc.objectId);
+            if (!grid) continue;
+
+            if (bc.kind === "FIXED_TEMPERATURE") {
+                for (let i = 0; i < grid.volumeFraction.length; i++) {
+                    if (grid.volumeFraction[i] > 0) {
+                        grid.cellType[i] = 1;
+                        grid.temperature[i] = bc.temperature;
+                    }
+                }
+            }
+        }
     }
 
     private applyBoundaryConditions(simulation: CompiledSimulation) {
