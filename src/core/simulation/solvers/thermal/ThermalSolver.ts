@@ -67,7 +67,6 @@ export class ThermalSolver {
     }
 
     private applyBoundaryConditions(simulation: CompiledSimulation) {
-        // Build unified volumeFraction FIRST
         const masterGrid = this.grids[0];
         const unifiedVolumeFraction = new Float32Array(masterGrid.temperature.length).fill(0);
         
@@ -92,7 +91,6 @@ export class ThermalSolver {
                     if (bc.applyTo === "VOLUME") {
                         shouldApply = true;
                     } else if (bc.applyTo === "SURFACE") {
-                        // Check against UNIFIED grid, not per-object grid
                         shouldApply = this.isSurfaceCell(i, unifiedVolumeFraction, nx, ny, nz);
                     }
 
@@ -120,12 +118,10 @@ export class ThermalSolver {
             const ny_ = y + n.dy;
             const nz_ = z + n.dz;
 
-            // At domain boundary
             if (nx_ < 0 || nx_ >= nx || ny_ < 0 || ny_ >= ny || nz_ < 0 || nz_ >= nz) {
                 return true;
             }
 
-            // Next to empty space (check unified grid)
             const ni = nx_ + nx * (ny_ + ny * nz_);
             if (unifiedVolumeFraction[ni] < 0.1) {
                 return true;
