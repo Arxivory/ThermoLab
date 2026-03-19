@@ -97,20 +97,6 @@ export class MeshVoxelizer {
                 objectIdMap: new Map(unifiedGrid.objectIdMap)
             };
 
-            // new version
-            // const grid: HeatGrid = {
-            //     nx, ny, nz,
-            //     dx, dy, dz,
-            //     origin,
-            //     temperature: new Float32Array(totalCells).fill(293.15),
-            //     volumeFraction: new Float32Array(totalCells),
-            //     globalNodeIndices: unifiedGrid.globalNodeIndices,
-            //     cellType: new Uint32Array(totalCells).fill(0), 
-            //     objectIds: unifiedGrid.objectIds,
-            //     objectId: obj.id,
-            //     objectIdMap: new Map(unifiedGrid.objectIdMap)
-            // };
-
             for (let i = 0; i < totalCells; i++) {
                 if (unifiedGrid.objectIds![i] === objIdx) {
                     grid.volumeFraction[i] = unifiedGrid.volumeFraction[i];
