@@ -2,7 +2,6 @@ import { MeshVoxelizer } from "../../geometry/MeshVoxelixer";
 import { ComputePipeline } from "../../gpu/ComputePipeline";
 import { GPUDeviceManager } from "../../gpu/GPUDeviceManager";
 import type { CompiledSimulation } from "../../types/CompiledSimulation";
-import { applyBoundaryConditions } from "./BoundaryHandlers";
 import type { HeatGrid } from "./HeatGrid";
 import { MatrixAssembler, type GlobalSystem } from "./MatrixAssembler";
 
