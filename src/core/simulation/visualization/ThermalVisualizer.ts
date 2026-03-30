@@ -3,19 +3,34 @@ import type { CompiledSimulation } from "../types/CompiledSimulation";
 import type { HeatGrid } from "../solvers/thermal/HeatGrid";
 import { temperatureColor } from "./colormaps";
 
+export interface TemperatureRange {
+    min: number;
+    max: number;
+}
+
 export class ThermalVisualizer {
     static update(
         simulation: CompiledSimulation,
         grids: HeatGrid[]
-    ) {
+    ): TemperatureRange {
+        let overallMin = Infinity;
+        let overallMax = -Infinity;
+
         for (const grid of grids) {
             const obj = simulation.objects.find(o => o.id === grid.objectId);
             if (!obj || !obj.mesh) continue;
 
             const { min, max } = this.computeRange(grid);
+            overallMin = Math.min(overallMin, min);
+            overallMax = Math.max(overallMax, max);
 
             this.applyToMesh(obj.mesh, grid, min, max);
         }
+
+        if (overallMin === Infinity) overallMin = 293;
+        if (overallMax === -Infinity) overallMax = 300;
+
+        return { min: overallMin, max: overallMax };
     }
 
     private static computeRange(grid: HeatGrid) {

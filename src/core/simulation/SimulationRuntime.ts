@@ -1,12 +1,13 @@
 import type { HeatGrid } from "./solvers/thermal/HeatGrid";
 import { ThermalSolver } from "./solvers/thermal/ThermalSolver";
 import type { CompiledSimulation } from "./types/CompiledSimulation";
-import { ThermalVisualizer } from "./visualization/ThermalVisualizer";
+import { ThermalVisualizer, type TemperatureRange } from "./visualization/ThermalVisualizer";
 
 export class SimulationRuntime {
     private thermalSolver: ThermalSolver;
     private currentSimulation: CompiledSimulation | null = null;
     private isInitialized: boolean = false;
+    private lastTemperatureRange: TemperatureRange | null = null;
 
     public onProgress: (iteration: number) => void = () => {};
     public onComplete: (grids: HeatGrid[]) => void = () => {};
@@ -41,9 +42,13 @@ export class SimulationRuntime {
 
         this.onComplete(results);
 
-        ThermalVisualizer.update(this.currentSimulation, results);
+        this.lastTemperatureRange = ThermalVisualizer.update(this.currentSimulation, results);
 
         return results;
+    }
+
+    getLastTemperatureRange(): TemperatureRange | null {
+        return this.lastTemperatureRange;
     }
 
     resetTemperatures() {

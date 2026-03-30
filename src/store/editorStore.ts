@@ -39,6 +39,9 @@ export interface EditorState {
 
     transformMode: TransformMode;
 
+    thermalRange: { min: number; max: number } | null;
+    setThermalRange: (range: { min: number; max: number } | null) => void;
+
     setActiveCategory: (cat: "HOME" | "TOOLS") => void
     setSelectedObject: (id: string | null) => void
     setViewMode: (mode: ViewMode) => void
@@ -99,6 +102,8 @@ export const useEditorStore = create<EditorState>()(
 
         transformMode: "TRANSLATE",
 
+        thermalRange: null,
+
         setActiveCategory: (cat) => set({ activeCategory: cat }),
         setSelectedObject: (id) => set({ selectedObjectId: id }),
         setViewMode: (mode) => set({ viewMode: mode }),
@@ -125,6 +130,8 @@ export const useEditorStore = create<EditorState>()(
         closeModal: () => set({ activeModal: "NONE" }),
 
         setTransformMode: (mode) => set({ transformMode: mode }),
+
+        setThermalRange: (range) => set({ thermalRange: range }),
 
         updateObjectTransform: (id, transform) =>
             set((state) => {

@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from "react"
 import { initRenderer } from "../core/renderer/renderer"
+import ThermalLegend from "./ThermalLegend"
 
 interface Props {
   canvasRef: RefObject<HTMLCanvasElement | null>
@@ -16,6 +17,7 @@ const Workspace = ({canvasRef}: Props) => {
   return (
     <div className="workspace panel">
       <canvas ref={canvasRef} className="workspace-canvas"></canvas>
+      <ThermalLegend />
     </div>
   )
 }

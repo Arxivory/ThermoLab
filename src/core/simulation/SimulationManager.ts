@@ -11,7 +11,12 @@ export class SimulationManager {
         const compiled = SimulationCompiler.compile(editorState);
         this.runtime = new SimulationRuntime();
         await this.runtime.setup(compiled);
-        this.runtime.runSteadyState(5000);
+        await this.runtime.runSteadyState(5000);
+        
+        const temperatureRange = this.runtime.getLastTemperatureRange();
+        if (temperatureRange) {
+            editorState.setThermalRange(temperatureRange);
+        }
     }
 
     start(editorState: EditorState) {
