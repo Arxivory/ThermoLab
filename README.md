@@ -1,5 +1,7 @@
 # Thermolab
 
+<img src="public\preview\Thermolab-Preview.png" alt="Description" width="400" height="auto">
+
 Thermolab is a web-based, GPU-accelerated scientific computing platform for research and engineering in thermal sciences and fluid dynamics. It combines numerical solvers, visualization, and machine learning to deliver fast, interactive simulations directly in the browser.
 
 **Note**: This project is still under development.
