@@ -49,22 +49,6 @@ export class ThermalSolver {
         return this.grids;
     }
 
-    private applyBoundaryConditionsLegacy(simulation: CompiledSimulation) {
-        for (const bc of simulation.boundaryConditions) {
-            const grid = this.grids.find(g => g.objectId === bc.objectId);
-            if (!grid) continue;
-
-            if (bc.kind === "FIXED_TEMPERATURE") {
-                for (let i = 0; i < grid.volumeFraction.length; i++) {
-                    if (grid.volumeFraction[i] > 0) {
-                        grid.cellType[i] = 1;
-                        grid.temperature[i] = bc.temperature;
-                    }
-                }
-            }
-        }
-    }
-
     private applyBoundaryConditions(simulation: CompiledSimulation) {
         const masterGrid = this.grids[0];
         const unifiedVolumeFraction = new Float32Array(masterGrid.temperature.length).fill(0);
